@@ -1,0 +1,17 @@
+.login-grid {
+  height: 100%;
+  padding: 150px 0;
+}
+
+.signup-input {
+  width: 450px;
+}
+
+.signup-input-button {
+  width: 218px;
+  height: 40px;
+}
+
+.logo {
+  width: 700px;
+}

@@ -20,7 +20,11 @@ import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import countries from "../constants/countries";
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import './Signup.css'
+import Logo from "../logo.svg";
+import { grey } from "@mui/material/colors";
 
 function Signup(props) {
   //password
@@ -58,11 +62,19 @@ function Signup(props) {
     props.history.push('/');
   }
 
+  const Div = styled('div')(({ theme }) => ({
+    ...theme.typography.button,
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2),
+    fontSize: 26,
+  }));
+
 
 
   return(
     <form noValidate autoComplete="off">
-      <h3>Rejestracja</h3>
+      <img src={Logo} className="logo" onClick={handleHome}/>
+      <Div>{"Rejestracja"}</Div>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField className="signup-input" id="outlined-basic" label="Login" variant="outlined" />
@@ -107,6 +119,7 @@ function Signup(props) {
               inputFormat="dd/MM/yyyy"
               value={date}
               onChange={handleChange}
+              label="Birth"
               renderInput={(params) => <TextField className="signup-input" {...params} />}
             />
           </LocalizationProvider>

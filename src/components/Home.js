@@ -1,10 +1,29 @@
 import React from "react";
+import Button from '@mui/material/Button';
+import { Grid } from "@mui/material";
+import './Home.css'
+import Logo from "../logo.svg";
 
-function Home() {
+function Home(props) {
+
+  const handleSignup = () => {
+    props.history.push('/signup');
+  }
+  const handleLogin = () => {
+    props.history.push('/login');
+  }
+
   return (
-    <div>
-      Welcome to the Home Page!
-    </div>
+
+      <Grid container spacing={2} className="home-grid" justifyContent="center" alignItems="center">
+        <Grid>
+          <img src={Logo} className="home-logo" />
+        </Grid>
+        <Grid item container xs={12} direction="column" alignItems="center" style={{ gap: '15px'}}>
+          <Button variant="outlined" className="home-button" onClick={handleLogin}>Logowanie</Button>
+          <Button variant="outlined" className="home-button" onClick={handleSignup}>Rejestracja</Button>
+        </Grid>
+      </Grid>
   );
 }
 

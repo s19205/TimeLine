@@ -2,7 +2,7 @@ import React from "react";
 
 function Dashbard(props) {
   const handleLogout = () => {
-    props.history.push('/login');
+    props.history.push('/');
   }
 
   return (
