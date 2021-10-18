@@ -1,16 +1,15 @@
 import React from "react";
+import Header from './Header';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../redux/userSlice';
 
-function Dashbard(props) {
-  const handleLogout = () => {
-    props.history.push('/');
-  }
+function Dashboard(props) {
 
   return (
     <div>
-      Welcome User!<br/><br/>
-      <input type="button" onClick={handleLogout} value="Logout"/>
+      
     </div>
   );
 }
 
-export default Dashbard;
+export default Dashboard;

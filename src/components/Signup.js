@@ -25,8 +25,14 @@ import Typography from '@mui/material/Typography';
 import './Signup.css'
 import Logo from "../logo.svg";
 import { grey } from "@mui/material/colors";
+import { useSelector, useDispatch } from 'react-redux';
+import { login, logout } from '../redux/userSlice';
 
 function Signup(props) {
+
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const dispatch = useDispatch();
+
   //password
   const [password, setPassword] = useState({
     password: '',
@@ -174,8 +180,8 @@ function Signup(props) {
         </Grid>
 
         <Grid item container xs={12} justifyContent="center" style={{ gap: '15px' }}>
-          <Button variant="outlined" className="signup-input-button" onClick={handleHome}>Back</Button>
-          <Button variant="contained" className="signup-input-button" onClick={handleSignup}>Sign Up</Button>  
+          <Button variant="outlined" className="signup-input-button" onClick={() => {dispatch(logout()); handleHome(); }}>Back</Button>
+          <Button variant="contained" className="signup-input-button" onClick={ () => {dispatch(login()); handleSignup(); }}>Sign Up</Button>  
         </Grid>
 
       </Grid>

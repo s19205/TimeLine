@@ -11,9 +11,15 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormControl from '@mui/material/FormControl';
-import './Login.css'
+import './Login.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { login, logout } from '../redux/userSlice';
+
 
 function Login(props) {
+  
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const dispatch = useDispatch();
 
   const handleLogin = () => {
     props.history.push('/dashboard');
@@ -87,8 +93,8 @@ function Login(props) {
         </Grid>
 
         <Grid item container xs={12} justifyContent="center" style={{ gap: '15px' }}>
-          <Button variant="outlined" className="signup-input-button" onClick={handleHome}>Back</Button>
-          <Button variant="contained" className="signup-input-button" onClick={handleLogin}>Login</Button>  
+          <Button variant="outlined" className="signup-input-button" onClick={() => {dispatch(logout()); handleHome(); }}>Back</Button>
+          <Button variant="contained" className="signup-input-button" onClick={ () => {dispatch(login()); handleLogin(); }}>Login</Button>  
         </Grid>
 
       </Grid>
