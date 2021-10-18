@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -16,15 +15,14 @@ import FormControl from '@mui/material/FormControl';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import countries from "../constants/countries";
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import './Signup.css'
 import Logo from "../logo.svg";
-import { grey } from "@mui/material/colors";
 import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../redux/userSlice';
 
@@ -75,7 +73,15 @@ function Signup(props) {
     fontSize: 26,
   }));
 
+  const CustomWidthTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))({
+    [`& .${tooltipClasses.tooltip}`]: {
+      maxWidth: 500,
+    },
+  });
 
+  const loginText = `Wpisany login zostaje z tobą na zawsze także dobrze pomyślij nad nim`
 
   return(
     <form noValidate autoComplete="off">
@@ -83,7 +89,9 @@ function Signup(props) {
       <Div>{"Rejestracja"}</Div>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField className="signup-input" id="outlined-basic" label="Login" variant="outlined" />
+          <Tooltip title={loginText}>
+            <TextField className="signup-input" id="outlined-basic" label="Login" variant="outlined" />
+          </Tooltip>
         </Grid>
         <Grid item xs={12} >
           <FormControl variant="outlined">

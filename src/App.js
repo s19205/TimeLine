@@ -6,6 +6,8 @@ import Dashboard from './components/Dashboard';
 import Home from './components/Home';
 import Signup from './components/Signup';
 import Header from './components/Header';
+import UserInfo from './components/UserInfo';
+import UserInfoEdit from './components/UserInfoEdit';
 import { useSelector } from 'react-redux';
 
 function App() {
@@ -21,7 +23,8 @@ function App() {
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
             <Route path="/dashboard" component={Dashboard} />
-
+            <Route path="/user-info" component={UserInfo} />
+            <Route path="/edit-user-info" component={UserInfoEdit} />
           </Switch>
         </div>
       </BrowserRouter>

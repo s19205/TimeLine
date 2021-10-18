@@ -55,10 +55,6 @@ html {
   }
 }
 
-.header {
-  height: 5%;
-}
-
 .content {
-  height: 95%;
+  height: calc(100% - 75px);
 }

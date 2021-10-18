@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../redux/userSlice';
+import { login, logout } from '../redux/userSlice';
 import Logo from "../logo.svg";
 import Avatar from '@mui/material/Avatar';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -25,10 +25,17 @@ const Header = (props) => {
     dispatch(logout());
     history.push('/');
   }
-  const handleTimeLine = () => {
-    dispatch(logout());
+  const handleTimeLine = (event) => {
+    dispatch(login());
+    handleClose(event);
     history.push('/dashboard');
   }
+  const handleUserInfo = (event) => {
+    dispatch(login());
+    handleClose(event);
+    history.push('/user-info');
+  }
+
   //dropdown menu
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -99,7 +106,7 @@ const Header = (props) => {
                       aria-labelledby="composition-button"
                       onKeyDown={handleListKeyDown}
                     >
-                      <MenuItem onClick={handleClose}>Dane osobiste</MenuItem>
+                      <MenuItem onClick={handleUserInfo}>Dane osobiste</MenuItem>
                       <MenuItem onClick={handleTimeLine}>Mój TimeLine</MenuItem>
                       <MenuItem onClick={handleClose}>Nowe wydarzenie</MenuItem>
                       <MenuItem onClick={handleClose}>Nowy typ wydarzenia</MenuItem>
@@ -115,7 +122,7 @@ const Header = (props) => {
 
 
         </div>
-        <IconButton onClick={() => { handleLogout(); }}>
+        <IconButton onClick={ handleLogout }>
           <LogoutIcon color="action" />
         </IconButton>
       </div>
