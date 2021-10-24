@@ -3,22 +3,17 @@ import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import { Grid } from "@mui/material";
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import FormControl from '@mui/material/FormControl';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import './Signup.css';
+import { Grid, IconButton } from "@mui/material";
 import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../redux/userSlice';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+import Autocomplete from '@mui/material/Autocomplete';
+import typesOfEvent from "../constants/typesOfEvent";
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 
-function UserInfo(props) {
-
+function ShowEvent(props) {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const dispatch = useDispatch();
 
@@ -28,10 +23,9 @@ function UserInfo(props) {
     setDate(newDate);
   };
 
-  //dashboard
   const handleEdit = () => {
     dispatch(login());
-    props.history.push('/edit-user-info');
+    props.history.push('/edit-event');
   }
   const handleBack = () => {
     dispatch(login());
@@ -47,15 +41,15 @@ function UserInfo(props) {
 
   return(
     <form noValidate autoComplete="off">
-      <Div>{"Dane osobiste"}</Div>
+      <Div>{"Wydarzenie"}</Div>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField 
             className="signup-input" 
             id="outlined-basic" 
-            label="First name" 
+            label="Nazwa" 
             variant="outlined" 
-            defaultValue="Natalia"
+            defaultValue="Urodziny Zosi"
             InputProps={{
               readOnly: true,
             }} 
@@ -66,9 +60,11 @@ function UserInfo(props) {
           <TextField 
             className="signup-input" 
             id="outlined-basic" 
-            label="Last name" 
+            label="Opis" 
             variant="outlined"
-            defaultValue="Ostyńska"
+            multiline
+            maxRows={4}
+            defaultValue="Najlepsze urodziny na których byłam! Chcę powtórkę!"
             InputProps={{
               readOnly: true,
             }} 
@@ -81,59 +77,47 @@ function UserInfo(props) {
               inputFormat="dd/MM/yyyy"
               value={date}
               onChange={handleChange}
-              label="Birth"
+              label="Data"
               disabled
               renderInput={(params) => <TextField className="signup-input" {...params} />}
             />
           </LocalizationProvider>
         </Grid>
 
-        <Grid item xs={12}>
-          <TextField 
-            className="signup-input" 
-            id="outlined-basic" 
-            label="Enter email" 
-            variant="outlined" 
-            defaultValue="natao@pjwstk.com"
-            disabled
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">Gender</FormLabel>
-            <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-              <FormControlLabel value="female" control={<Radio />} label="Female"disabled checked/>
-              <FormControlLabel value="male" control={<Radio />} label="Male" disabled/>
-              <FormControlLabel value="other" control={<Radio />} label="Other" disabled/>
-            </RadioGroup>
-          </FormControl>
-        </Grid>
-
         <Grid item container xs={12} justifyContent="center">
-          <TextField
+        <TextField
             className="signup-input" 
             id="outlined-basic" 
-            label="Country"
+            label="Rodzaj"
             variant="outlined" 
-            defaultValue="Poland"
+            defaultValue="Urodziny"
             InputProps={{
               readOnly: true,
             }} 
           />
-            
         </Grid>
 
-        <Grid item container xs={12} justifyContent="center" style={{ gap: '15px' }}>
+        <Grid item xs={12}>
+        <Div sx={{ fontSize: 20 }}>{"Media"}</Div>
+          <Grid item container xs={12} justifyContent="center" style={{ gap: '30px' }}>
+            <IconButton>
+              <AddAPhotoIcon color="action" sx={{ fontSize: 70 }} />
+            </IconButton>
+            <IconButton>
+              <VideoCameraBackIcon color="action" sx={{ fontSize: 70 }} />
+            </IconButton>
+          </Grid>
+        </Grid>
+
+        <Grid item container xs={12} justifyContent="center" style={{ gap: '15px' }} >
           <Button variant="outlined" className="signup-input-button" onClick={ handleBack }>Powrót</Button>
           <Button variant="contained" className="signup-input-button" onClick={ handleEdit }>Edytuj</Button>  
-        </Grid>
+       </Grid>
 
       </Grid>
 
     </form>
   );
-
 }
 
-export default UserInfo;
+export default ShowEvent;

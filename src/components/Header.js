@@ -36,6 +36,12 @@ const Header = (props) => {
     history.push('/user-info');
   }
 
+  const handleAddEvent = (event) => {
+    dispatch(login());
+    handleClose(event);
+    history.push('/add-event');
+  }
+
   //dropdown menu
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -108,7 +114,7 @@ const Header = (props) => {
                     >
                       <MenuItem onClick={handleUserInfo}>Dane osobiste</MenuItem>
                       <MenuItem onClick={handleTimeLine}>Mój TimeLine</MenuItem>
-                      <MenuItem onClick={handleClose}>Nowe wydarzenie</MenuItem>
+                      <MenuItem onClick={handleAddEvent}>Nowe wydarzenie</MenuItem>
                       <MenuItem onClick={handleClose}>Nowy typ wydarzenia</MenuItem>
                       <MenuItem onClick={handleClose}>Ustawienia</MenuItem>
                     </MenuList>

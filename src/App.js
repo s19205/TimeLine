@@ -8,6 +8,9 @@ import Signup from './components/Signup';
 import Header from './components/Header';
 import UserInfo from './components/UserInfo';
 import UserInfoEdit from './components/UserInfoEdit';
+import AddEvent from './components/AddEvent';
+import ShowEvent from './components/ShowEvent';
+import EditEvent from './components/EditEvent';
 import { useSelector } from 'react-redux';
 
 function App() {
@@ -23,8 +26,13 @@ function App() {
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
             <Route path="/dashboard" component={Dashboard} />
+
             <Route path="/user-info" component={UserInfo} />
             <Route path="/edit-user-info" component={UserInfoEdit} />
+
+            <Route path="/add-event" component={AddEvent} />
+            <Route path="/show-event" component={ShowEvent} />
+            <Route path="/edit-event" component={EditEvent} />
           </Switch>
         </div>
       </BrowserRouter>
