@@ -41,6 +41,11 @@ const Header = (props) => {
     handleClose(event);
     history.push('/add-event');
   }
+  const handleSettings = (event) => {
+    dispatch(login());
+    handleClose(event);
+    history.push('/settings');
+  }
 
   //dropdown menu
   const [open, setOpen] = React.useState(false);
@@ -73,7 +78,7 @@ const Header = (props) => {
 
   return (
     <div className="header">
-      <img src={Logo} alt="TimeLine" />
+      <img src={Logo} alt="TimeLine" onClick={handleTimeLine} />
       <div className="header-container">
         <div className="avatar-container">
           <div>{ username }</div>
@@ -115,8 +120,7 @@ const Header = (props) => {
                       <MenuItem onClick={handleUserInfo}>Dane osobiste</MenuItem>
                       <MenuItem onClick={handleTimeLine}>Mój TimeLine</MenuItem>
                       <MenuItem onClick={handleAddEvent}>Nowe wydarzenie</MenuItem>
-                      <MenuItem onClick={handleClose}>Nowy typ wydarzenia</MenuItem>
-                      <MenuItem onClick={handleClose}>Ustawienia</MenuItem>
+                      <MenuItem onClick={handleSettings}>Ustawienia</MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>
