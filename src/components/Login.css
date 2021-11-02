@@ -13,5 +13,6 @@
 }
 
 .logo {
+  cursor: pointer;
   width: 700px;
 }

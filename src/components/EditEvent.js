@@ -68,6 +68,7 @@ function EditEvent(props) {
               onChange={handleChange}
               label="Data"
               renderInput={(params) => <TextField className="signup-input" {...params} />}
+              maxDate={new Date()}
             />
           </LocalizationProvider>
         </Grid>

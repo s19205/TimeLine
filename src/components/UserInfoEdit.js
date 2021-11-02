@@ -39,6 +39,9 @@ function UserInfoEdit(props) {
     fontSize: 26,
   }));
 
+  let dt = new Date();
+  const maxDate = dt.setDate(dt.getDate() - 3650);
+
   return(
     <form noValidate autoComplete="off">
       <Div>{"Edycja danych osobistych"}</Div>
@@ -72,6 +75,7 @@ function UserInfoEdit(props) {
               onChange={handleChange}
               label="Birth"
               renderInput={(params) => <TextField className="signup-input" {...params} />}
+              maxDate={maxDate}
             />
           </LocalizationProvider>
         </Grid>
