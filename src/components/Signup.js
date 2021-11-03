@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 // import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { Grid } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import Radio from '@mui/material/Radio';
@@ -21,8 +20,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../redux/userSlice';
 import { Formik, Form, Field } from 'formik';
 import { TextField, RadioGroup } from 'formik-mui';
-import LinearProgress from '@mui/material/LinearProgress';
-import { DatePicker, DateTimePicker, TimePicker } from 'formik-mui-lab';
+import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from './validation/ValidateAutocomplete';
 
 function Signup(props) {

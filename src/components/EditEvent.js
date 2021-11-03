@@ -1,17 +1,21 @@
 import React, { useState } from "react";
-import TextField from '@mui/material/TextField';
+// import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+// import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { Grid, IconButton } from "@mui/material";
 import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../redux/userSlice';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import Autocomplete from '@mui/material/Autocomplete';
+// import Autocomplete from '@mui/material/Autocomplete';
 import typesOfEvent from "../constants/typesOfEvent";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
+import { Formik, Form, Field } from 'formik';
+import { TextField } from 'formik-mui';
+import { DatePicker } from 'formik-mui-lab';
+import ValidateAutocomplete from './validation/ValidateAutocomplete';
 
 function EditEvent(props) {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -27,6 +31,10 @@ function EditEvent(props) {
     dispatch(login());
     props.history.push('/show-event');
   }
+  const handleEdit = () => {
+    dispatch(login());
+    props.history.push('/show-event');
+  }
 
   const Div = styled('div')(({ theme }) => ({
     ...theme.typography.button,
@@ -35,74 +43,124 @@ function EditEvent(props) {
   }));
 
   return(
-    <form noValidate autoComplete="off">
-      <Div>{"Edycja wydarzenia"}</Div>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField 
-            className="signup-input" 
-            id="outlined-basic" 
-            label="Nazwa" 
-            variant="outlined" 
-            defaultValue="Urodziny Zosi"
-          />
-        </Grid>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
 
-        <Grid item xs={12}>
-          <TextField 
-            className="signup-input" 
-            id="outlined-basic" 
-            label="Opis" 
-            variant="outlined"
-            multiline
-            maxRows={4}
-            defaultValue="Najlepsze urodziny na których byłam! Chcę powtórkę!"
-         />
-        </Grid>
+      <Formik
+        initialValues={{
+          name: '',
+          description: '',
+          date: '',
+          type: '',
+        }}
+        validate={(values) => {
+          const errors = {};
+          if (!values.name) {
+            errors.name = 'Name is required';
+          } else if (values.name.length <= 5) {
+            errors.name = 'Name is too short';
+          }
+          if (!values.date) {
+            errors.date = 'Date is required';
+          }
+          if (!values.type) {
+            errors.type = 'Type is required';
+          }
+          return errors; 
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          handleEdit();
+        }}
+      >
+        {({ submitForm, isSubmitting, setFieldTouched, setFieldValue, errors, values, touched }) => (
+          <Form>
+            <Div>{"Edycja wydarzenia"}</Div>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Field 
+                  component={TextField}
+                  className="signup-input" 
+                  label="Nazwa"
+                  name="name"
+                  variant="outlined" 
+                />
+              </Grid>
+              
+              <Grid item xs={12}>
+                <Field 
+                  component={TextField}
+                  className="signup-input" 
+                  name="description"
+                  label="Opis" 
+                  variant="outlined"
+                  multiline
+                  maxRows={4}
+                />
+              </Grid>
 
-        <Grid item xs={12}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DesktopDatePicker
-              inputFormat="dd/MM/yyyy"
-              value={date}
-              onChange={handleChange}
-              label="Data"
-              renderInput={(params) => <TextField className="signup-input" {...params} />}
-              maxDate={new Date()}
-            />
-          </LocalizationProvider>
-        </Grid>
+              <Grid item xs={12}>
+                <Field
+                  component={DatePicker}
+                  name="date"
+                  inputFormat="dd/MM/yyyy"
+                  label="Data"
+                  maxDate={Date.now()}
+                  textField={{ variant: 'outlined', className: "signup-input" }}
+                />
+              </Grid>
 
-        <Grid item container xs={12} justifyContent="center">
-          <Autocomplete
-            disablePortal
-            id="combo-box-type"
-            options={typesOfEvent}
-            sx={{ width: 400 }}
-            renderInput={(params) => <TextField {...params} label="Rodzaj" />}
-          />
-        </Grid>
+              <Grid item container xs={12} justifyContent="center">
+                <ValidateAutocomplete
+                  id="type"
+                  className="signup-input"
+                  name="type"
+                  variant="outlined"
+                  label="Rodzaj"
+                  options={typesOfEvent}
+                  getOptionLabel={(option) => option.label || ''}
+                  onBlur={() => setFieldTouched('type', true)}
+                  error={errors.type}
+                  touched={touched.type}
+                  onChange={(event, values) => setFieldValue('type', values)}
+                  value={values.type}
+                />
+              </Grid>
 
-        <Grid item xs={12}>
-        <Div sx={{ fontSize: 20 }}>{"Edytuj media"}</Div>
-          <Grid item container xs={12} justifyContent="center" style={{ gap: '30px' }}>
-            <IconButton>
-              <AddAPhotoIcon color="action" sx={{ fontSize: 70 }} />
-            </IconButton>
-            <IconButton>
-              <VideoCameraBackIcon color="action" sx={{ fontSize: 70 }} />
-            </IconButton>
-          </Grid>
-        </Grid>
+              <Grid item xs={12}>
+              <Div sx={{ fontSize: 20 }}>{"Dodaj media"}</Div>
+                <Grid item container xs={12} justifyContent="center" style={{ gap: '30px' }}>
+                  <IconButton>
+                    <AddAPhotoIcon color="action" sx={{ fontSize: 70 }} />
+                  </IconButton>
+                  <IconButton>
+                    <VideoCameraBackIcon color="action" sx={{ fontSize: 70 }} />
+                  </IconButton>
+                </Grid>
+              </Grid>
 
-        <Grid item container xs={12} justifyContent="center" style={{ gap: '15px' }} >
-          <Button variant="outlined" className="signup-input-button" onClick={ handleBack }>Powrót</Button>
-          <Button variant="contained" className="signup-input-button" onClick={ handleBack }>Zachowaj</Button>  
-       </Grid>
+              <Grid item container xs={12} justifyContent="center" style={{ gap: '15px' }}>
+                <Button 
+                  variant="outlined" 
+                  className="signup-input-button" 
+                  disabled={isSubmitting}
+                  onClick={handleBack}
+                >
+                  Powrót
+                </Button>
+                <Button 
+                  variant="contained" 
+                  className="signup-input-button" 
+                  disabled={isSubmitting}
+                  onClick={submitForm}
+                >
+                  Zachowaj
+                </Button>  
+              </Grid>
 
-      </Grid>
-
-    </form>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+    </LocalizationProvider>
   );
 }
 

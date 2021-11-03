@@ -11,7 +11,7 @@
 .header img {
   width: 250px;
   height: 100%;
-  
+  cursor: pointer;
 }
 
 .header-container {

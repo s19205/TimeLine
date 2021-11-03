@@ -88,17 +88,6 @@ function UserInfo(props) {
         </Grid>
 
         <Grid item xs={12}>
-          <TextField 
-            className="signup-input" 
-            id="outlined-basic" 
-            label="Enter email" 
-            variant="outlined" 
-            defaultValue="natao@pjwstk.com"
-            disabled
-          />
-        </Grid>
-
-        <Grid item xs={12}>
           <FormControl component="fieldset">
             <FormLabel component="legend">Gender</FormLabel>
             <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
