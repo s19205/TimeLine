@@ -23,6 +23,7 @@ function EditEvent(props) {
 
   //date
   const [date, setDate] = React.useState(new Date());
+  const [file, setFile] = React.useState(null);
   const handleChange = (newDate) => {
     setDate(newDate);
   };
@@ -34,6 +35,11 @@ function EditEvent(props) {
   const handleEdit = () => {
     dispatch(login());
     props.history.push('/show-event');
+  }
+
+  const handleFile = (event) => {
+    const file = event.target.files[0];
+    setFile(file);
   }
 
   const Div = styled('div')(({ theme }) => ({
@@ -128,15 +134,21 @@ function EditEvent(props) {
               <Grid item xs={12}>
               <Div sx={{ fontSize: 20 }}>{"Dodaj media"}</Div>
                 <Grid item container xs={12} justifyContent="center" style={{ gap: '30px' }}>
-                  <IconButton>
+                <Button component="label"> 
                     <AddAPhotoIcon color="action" sx={{ fontSize: 70 }} />
-                  </IconButton>
-                  <IconButton>
+                    <input type="file" hidden onChange={handleFile}></input>
+                  </Button>
+                  <Button component="label">
                     <VideoCameraBackIcon color="action" sx={{ fontSize: 70 }} />
-                  </IconButton>
+                    <input type="file" hidden onChange={handleFile}></input>
+                  </Button>
                 </Grid>
               </Grid>
-
+              <Grid item xs={12}>
+                {file && (
+                  <p>{file.name}</p>
+                )}
+              </Grid>
               <Grid item container xs={12} justifyContent="center" style={{ gap: '15px' }}>
                 <Button 
                   variant="outlined" 
