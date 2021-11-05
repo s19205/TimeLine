@@ -100,13 +100,14 @@ const Header = (props) => {
               placement="bottom-start"
               transition
               disablePortal
+              style={{ zIndex: 1 }}
             >
             {({ TransitionProps, placement }) => (
               <Grow
                 {...TransitionProps}
                 style={{
                   transformOrigin:
-                    placement === 'bottom-start' ? 'left top' : 'left bottom',
+                    placement === 'bottom-start' ? 'left top' : 'left bottom'
                 }}
               >
                 <Paper>
@@ -128,9 +129,7 @@ const Header = (props) => {
             )}
           </Popper>
         </div>
-
-
-
+        
         </div>
         <IconButton onClick={ handleLogout }>
           <LogoutIcon color="action" />

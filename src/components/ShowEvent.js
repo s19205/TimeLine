@@ -40,7 +40,7 @@ function ShowEvent(props) {
 
   return(
     <form noValidate autoComplete="off">
-      <Div>{"Wydarzenie"}</Div>
+      <Div>{"Detale"}</Div>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField 
