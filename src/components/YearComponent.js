@@ -6,6 +6,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import Stack from '@mui/material/Stack';
 import './Dashboard.css';
 
+
 const YearComponent = () => {
   const [value, setValue] = React.useState(new Date());
 
@@ -25,6 +26,9 @@ const YearComponent = () => {
           />
           </Stack>
         </LocalizationProvider>
+      </div>
+      <div className="timeline">
+
       </div>
     </div>
   );
