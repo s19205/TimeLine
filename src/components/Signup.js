@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 // import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -6,13 +6,11 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { Grid } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import Radio from '@mui/material/Radio';
-// import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
-import countries from "../constants/countries";
 import { styled } from '@mui/material/styles';
 import './Signup.css'
 import Logo from "../logo.svg";
@@ -22,12 +20,19 @@ import { Formik, Form, Field } from 'formik';
 import { TextField, RadioGroup } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from './validation/ValidateAutocomplete';
+import { RegisterUser, GetAllCountries } from '../api/User'
 
 function Signup(props) {
-
+  const [countries, setCountries] = useState([])
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    const fetchCountries = async () => {
+      const response = await GetAllCountries()
+      setCountries(response.data)
+    }
+    fetchCountries()
+  }, [])
   //password
   const [password, setPassword] = useState({
     password: '',
@@ -42,8 +47,7 @@ function Signup(props) {
 
   //dashboard
   const handleSignup = () => {
-    dispatch(login());
-    props.history.push('/dashboard');
+    props.history.push('/login');
   }
   const handleBack = () => {
     dispatch(logout());
@@ -78,9 +82,9 @@ function Signup(props) {
           password: '',
           firstName: '',
           lastName: '',
-          date: '',
+          dateOfBirth: '',
           email: '',
-          gender: 'other',
+          sex: 'M',
           country: '',
         }}
         validate={(values) => {
@@ -97,8 +101,8 @@ function Signup(props) {
           if (!values.lastName) {
             errors.lastName = 'Last name is required';
           }
-          if (!values.date) {
-            errors.date = 'Birth is required';
+          if (!values.dateOfBirth) {
+            errors.dateOfBirth = 'Birth is required';
           }
           if (!values.email) {
             errors.email = 'Email is required';
@@ -112,8 +116,15 @@ function Signup(props) {
           }
           return errors; 
         }}
-        onSubmit={(values, { setSubmitting }) => {
-          handleSignup();
+        onSubmit={async (values, { setSubmitting }) => {
+          console.log(values);
+          const data = { ...values, idCountry: values.country.idCountry }
+          setSubmitting(true)
+          const response = await RegisterUser(data)
+          setSubmitting(false)
+          if (response.status >= 200 && response.status <= 399) {
+            handleSignup()
+          }
         }}
       >
         {({ submitForm, isSubmitting, setFieldTouched, setFieldValue, errors, values, touched }) => (
@@ -164,7 +175,7 @@ function Signup(props) {
               <Grid item xs={12}>
                 <Field
                   component={DatePicker}
-                  name="date"
+                  name="dateOfBirth"
                   inputFormat="dd/MM/yyyy"
                   label="Birth"
                   maxDate={Date.now()}
@@ -184,10 +195,10 @@ function Signup(props) {
               <Grid item container xs={12} justifyContent="center">
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Gender</FormLabel>
-                  <Field row component={RadioGroup} name="gender">
-                    <FormControlLabel value="female" control={<Radio />} label="Female" />
-                    <FormControlLabel value="male" control={<Radio />} label="Male" />
-                    <FormControlLabel value="other" control={<Radio />} label="Other" />
+                  <Field row component={RadioGroup} name="sex">
+                    <FormControlLabel value="F" control={<Radio />} label="Female" />
+                    <FormControlLabel value="M" control={<Radio />} label="Male" />
+                    <FormControlLabel value="N" control={<Radio />} label="Other" />
                   </Field>
                 </FormControl>
               </Grid>
@@ -200,7 +211,7 @@ function Signup(props) {
                   variant="outlined"
                   label="Choose a country"
                   options={countries}
-                  getOptionLabel={(option) => option.label || ''}
+                  getOptionLabel={(option) => option.countryName || ''}
                   onBlur={() => setFieldTouched('country', true)}
                   error={errors.country}
                   touched={touched.country}

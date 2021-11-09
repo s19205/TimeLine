@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiAddress = 'http://localhost:3000/';
+const apiAddress = 'https://localhost:44313';
 axios.defaults.baseURL = apiAddress;
 
 axios.interceptors.request.use(

@@ -1,4 +1,4 @@
-import axios from './axios';
+import axios from './index';
 
 export function GetAllCountries() {
   return axios.get('/user/signup');

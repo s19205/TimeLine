@@ -9,10 +9,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../redux/userSlice';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
-
+import { AutorizeUser } from '../api/User'
 
 function Login(props) {
-  
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const dispatch = useDispatch();
 
@@ -24,7 +23,6 @@ function Login(props) {
     dispatch(logout());
     props.history.push('/');
   }
-
   const [password, setPassword] = useState({
     password: '',
     showPassword: false,
@@ -52,8 +50,17 @@ function Login(props) {
         }
         return errors; 
       }}
-      onSubmit={(values, { setSubmitting }) => {
-        handleLogin();
+      onSubmit={async (values, { setSubmitting }) => {
+        console.log(values);
+        const data = { ...values }
+        setSubmitting(true)
+        const response = await AutorizeUser(data)
+        setSubmitting(false)
+        if (response.status >= 200 && response.status <= 399) {
+          window.localStorage.setItem('access_token', response.data.accessToken);
+          window.localStorage.setItem('refresh_token', response.data.refreshToken);
+          handleLogin()
+        }
       }}
     >
       {({ submitForm, isSubmitting }) => (
