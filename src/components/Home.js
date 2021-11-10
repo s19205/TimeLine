@@ -21,7 +21,7 @@ function Home(props) {
         </Grid>
         <Grid item container xs={12} direction="column" alignItems="center" style={{ gap: '15px'}}>
           <Button variant="outlined" className="home-button" onClick={handleLogin}>Logowanie</Button>
-          <Button variant="outlined" className="home-button" onClick={handleSignup}>Rejestracja</Button>
+          <Button variant="outlined" className="home-button" onClick={handleSignup}>Utwórz konto</Button>
         </Grid>
       </Grid>
   );

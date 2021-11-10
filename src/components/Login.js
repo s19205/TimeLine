@@ -43,24 +43,28 @@ function Login(props) {
       validate={(values) => {
         const errors = {};
         if (!values.login) {
-          errors.login = 'Login is required';
+          errors.login = 'Login wymagany';
         }
         if (!values.password) {
-          errors.password = 'Password is required';
+          errors.password = 'Hasło wymagane';
         }
         return errors; 
       }}
-      onSubmit={async (values, { setSubmitting }) => {
-        console.log(values);
+      onSubmit={async (values, { setSubmitting, setFieldError }) => {
         const data = { ...values }
-        setSubmitting(true)
-        const response = await AutorizeUser(data)
-        setSubmitting(false)
-        if (response.status >= 200 && response.status <= 399) {
+        try {
+          setSubmitting(true)
+          const response = await AutorizeUser(data)
           window.localStorage.setItem('access_token', response.data.accessToken);
           window.localStorage.setItem('refresh_token', response.data.refreshToken);
+          setSubmitting(false)
           handleLogin()
+        } catch (err) {
+          console.log(err.response.data);
+          const { field, errorMessage } = err.response.data;
+          (field && errorMessage) && setFieldError(field, errorMessage);
         }
+        
       }}
     >
       {({ submitForm, isSubmitting }) => (
@@ -85,7 +89,7 @@ function Login(props) {
                 className="signup-input"
                 type={password.showPassword ? 'text' : 'password'}
                 name="password"
-                label="Password"
+                label="Hasło"
               />
             </Grid>
 
@@ -96,7 +100,7 @@ function Login(props) {
                 disabled={isSubmitting}
                 onClick={handleBack}
               >
-                Back
+                Powrót
               </Button>
               <Button
                 type="submit"
@@ -105,7 +109,7 @@ function Login(props) {
                 disabled={isSubmitting}
                 onClick={submitForm}
               >
-                Login
+                Logowanie
               </Button>  
             </Grid>
 

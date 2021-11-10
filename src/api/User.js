@@ -24,4 +24,8 @@ export function DeleteUser() {
   return axios.delete('/user/');
 };
 
+export function refreshUser(data) {
+  return axios.post('/user/refresh', data);
+};
+
 

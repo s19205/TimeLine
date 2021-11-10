@@ -6,9 +6,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './redux/store'
 import { Provider } from 'react-redux'
+import history from './utils/history'
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter history={history}>
     <Provider store={store}>
       <App />
     </Provider>

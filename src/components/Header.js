@@ -23,6 +23,7 @@ const Header = (props) => {
   const history = useHistory();
   const handleLogout = () => {
     dispatch(logout());
+    window.localStorage.clear();
     history.push('/');
   }
   const handleTimeLine = (event) => {
