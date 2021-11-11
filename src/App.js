@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -12,13 +12,19 @@ import AddEvent from './components/AddEvent';
 import ShowEvent from './components/ShowEvent';
 import EditEvent from './components/EditEvent';
 import Settings from './components/Settings';
-import { useSelector } from 'react-redux';
 import background from './background2.svg';
 import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute';
+import { useSelector, useDispatch } from 'react-redux';
+import { login, logout } from './redux/userSlice'
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-
+  const dispatch = useDispatch()
+  useEffect(() => {
+    const access_token = window.localStorage.getItem('access_token')
+    access_token && dispatch(login())
+  }, [window.localStorage])
   return (
     <div className="App">
       <BrowserRouter>
@@ -32,9 +38,9 @@ function App() {
             backgroundRepeat: 'no-repeat'
           }}>
           <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={Signup} />
+            <PublicRoute exact path="/" component={Home} />
+            <PublicRoute path="/login" component={Login} />
+            <PublicRoute path="/signup" component={Signup} />
             <PrivateRoute path="/dashboard" component={Dashboard} />
 
             <PrivateRoute path="/user-info" component={UserInfo} />
