@@ -100,9 +100,6 @@ function Signup(props) {
     },
   });
 
-  let dt = new Date();
-  const maxDate = dt.setDate(dt.getDate() - 3650);
-
   const loginText = `Wpisany login zostaje z tobą na zawsze także dobrze pomyślij nad nim`
   const passwordText = `Hasło powinno zawierać co najmniej 1 małą literę, 1 wielką literę, 1 znak numeryczny i się składać z co najmniej 8 znaków`
   

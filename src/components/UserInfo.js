@@ -17,6 +17,7 @@ import './Signup.css';
 import { Formik, Form, Field } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../redux/userSlice';
+import CircularProgress from '@mui/material/CircularProgress';
 import { GetUser } from '../api/User'
 import moment from 'moment';
 
@@ -35,15 +36,8 @@ function UserInfo(props) {
       setUserData(response.data)
       setIsLoading(false)
     }
-    console.log(userData)
     fetchUserData()
   }, [])
-
-  //date
-  const [date, setDate] = React.useState(new Date());
-  const handleChange = (newDate) => {
-    setDate(newDate);
-  };
 
   //dashboard
   const handleEdit = () => {
@@ -58,16 +52,18 @@ function UserInfo(props) {
     padding: theme.spacing(2),
     fontSize: 26,
   }));
+
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
   }
+
   return(
     <Formik
         enableReinitialize={true}
         initialValues={{
           firstName: userData.firstName ? userData.firstName : '',
           lastName: userData.lastName ? userData.lastName : '',
-          date: userData.dateOfBirth,
+          dateOfBirth: userData.dateOfBirth ? userData.dateOfBirth : '',
           sex: userData.sex ? userData.sex: 'M',
           country: userData.country ? userData.country.countryName : '',
         }}
@@ -110,7 +106,7 @@ function UserInfo(props) {
                 <Field
                   component={TextField}
                   className="signup-input"
-                  name="date"
+                  name="dateOfBirth"
                   defaultValue={moment(values.dateOfBirth).format("DD/MM/yyyy")}
                   label="Data urodzenia"
                   InputProps={{
@@ -160,14 +156,11 @@ function UserInfo(props) {
                   Edytuj
                 </Button>  
               </Grid>
-
             </Grid>
           </Form>
         )}
       </Formik>
-
   );
-
 }
 
 export default UserInfo;

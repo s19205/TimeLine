@@ -14,6 +14,7 @@ import EditEvent from './components/EditEvent';
 import Settings from './components/Settings';
 import { useSelector } from 'react-redux';
 import background from './background2.svg';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -34,16 +35,16 @@ function App() {
             <Route exact path="/" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
-            <Route path="/dashboard" component={Dashboard} />
+            <PrivateRoute path="/dashboard" component={Dashboard} />
 
-            <Route path="/user-info" component={UserInfo} />
-            <Route path="/edit-user-info" component={UserInfoEdit} />
+            <PrivateRoute path="/user-info" component={UserInfo} />
+            <PrivateRoute path="/edit-user-info" component={UserInfoEdit} />
 
-            <Route path="/add-event" component={AddEvent} />
-            <Route path="/show-event" component={ShowEvent} />
-            <Route path="/edit-event" component={EditEvent} />
+            <PrivateRoute path="/add-event" component={AddEvent} />
+            <PrivateRoute path="/show-event" component={ShowEvent} />
+            <PrivateRoute path="/edit-event" component={EditEvent} />
 
-            <Route path="/settings" component={Settings} />
+            <PrivateRoute path="/settings" component={Settings} />
           </Switch>
         </div>
       </BrowserRouter>

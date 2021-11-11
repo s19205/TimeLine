@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Header.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../redux/userSlice';
@@ -14,9 +14,19 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
+import { GetUser } from '../api/User';
 
 
 const Header = (props) => {
+  const [login, setLogin] = useState({ login: '' });
+  useEffect(() => {
+    const fetchLogin = async () => {
+      const response = await GetUser()
+      setLogin(response.data)
+    }
+    fetchLogin()
+  }, [])
+
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const username = useSelector((state) => state.user.username);
   const dispatch = useDispatch();
@@ -27,23 +37,18 @@ const Header = (props) => {
     history.push('/');
   }
   const handleTimeLine = (event) => {
-    dispatch(login());
     handleClose(event);
     history.push('/dashboard');
   }
   const handleUserInfo = (event) => {
-    dispatch(login());
     handleClose(event);
     history.push('/user-info');
   }
-
   const handleAddEvent = (event) => {
-    dispatch(login());
     handleClose(event);
     history.push('/add-event');
   }
   const handleSettings = (event) => {
-    dispatch(login());
     handleClose(event);
     history.push('/settings');
   }
@@ -75,7 +80,6 @@ const Header = (props) => {
       setOpen(false);
     }
   }
-
 
   return (
     <div className="header">

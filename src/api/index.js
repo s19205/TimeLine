@@ -1,5 +1,4 @@
 import axios from 'axios';
-import history from '../utils/history'
 import { handleTokenExpired } from '../utils/apiUtils';
 const apiAddress = 'https://localhost:44313';
 axios.defaults.baseURL = apiAddress;
