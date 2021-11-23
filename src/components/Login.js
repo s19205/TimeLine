@@ -6,10 +6,11 @@ import Logo from "../logo.svg";
 import Button from '@mui/material/Button';
 import './Login.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { login, logout } from '../redux/userSlice';
+import { login, logout, setUsername } from '../redux/userSlice';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 import { AutorizeUser } from '../api/User'
+import jwt_decode from "jwt-decode";
 
 function Login(props) {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -55,10 +56,16 @@ function Login(props) {
         try {
           setSubmitting(true)
           const response = await AutorizeUser(data)
-          window.localStorage.setItem('access_token', response.data.accessToken);
-          window.localStorage.setItem('refresh_token', response.data.refreshToken);
-          setSubmitting(false)
-          handleLogin()
+          const { accessToken, refreshToken } = response.data
+          if (accessToken) {
+            window.localStorage.setItem('access_token',accessToken);
+            const decoded = jwt_decode(accessToken)
+            console.log(decoded);
+            dispatch(setUsername(decoded.login))
+            window.localStorage.setItem('refresh_token',refreshToken);
+            setSubmitting(false)
+            handleLogin()
+          }
         } catch (err) {
           console.log(err.response.data);
           const { field, errorMessage } = err.response.data;

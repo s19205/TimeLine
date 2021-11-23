@@ -14,20 +14,8 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-import { GetUser } from '../api/User';
-
 
 const Header = (props) => {
-  const [login, setLogin] = useState({ login: '' });
-  useEffect(() => {
-    const fetchLogin = async () => {
-      const response = await GetUser()
-      setLogin(response.data)
-    }
-    fetchLogin()
-  }, [])
-
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const username = useSelector((state) => state.user.username);
   const dispatch = useDispatch();
   const history = useHistory();

@@ -1,9 +1,5 @@
 import axios from './index';
 
-export function GetAllCountries() {
-  return axios.get('/user/signup');
-};
-
 export function RegisterUser(user) {
   return axios.post('/user/signup', user);
 };

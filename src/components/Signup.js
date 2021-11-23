@@ -27,7 +27,8 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { RegisterUser, GetAllCountries } from '../api/User'
+import { RegisterUser } from '../api/User';
+import { GetAllCountries } from '../api/Country';
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;

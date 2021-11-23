@@ -16,15 +16,22 @@ import background from './background2.svg';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 import { useSelector, useDispatch } from 'react-redux';
-import { login, logout } from './redux/userSlice'
+import { login, setUsername } from './redux/userSlice';
+import jwt_decode from "jwt-decode";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const dispatch = useDispatch()
+
   useEffect(() => {
     const access_token = window.localStorage.getItem('access_token')
-    access_token && dispatch(login())
+    if (access_token) {
+      dispatch(login())
+      const decoded = jwt_decode(access_token)
+      dispatch(setUsername(decoded.login))
+    }
   }, [window.localStorage])
+  
   return (
     <div className="App">
       <BrowserRouter>
