@@ -105,7 +105,7 @@ const YearComponent = () => {
         <Stack spacing={3}>
           <DatePicker
             views={['year']}
-            label="Wybierz rok"
+            label="Wybrany rok"
             value={value}
             onChange={(newValue) => {
               setValue(newValue);

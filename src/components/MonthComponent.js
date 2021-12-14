@@ -105,7 +105,7 @@ const MonthComponent = (props) => {
         <Stack spacing={3}>
           <DatePicker
             views={['year', 'month']}
-            label="Wybierz miesiąc"
+            label="Wybrany miesiąc"
             value={value}
             onChange={(newValue) => {
               setValue(newValue);

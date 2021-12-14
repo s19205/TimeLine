@@ -16,10 +16,44 @@ import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from './validation/ValidateAutocomplete';
+import { AddEvent } from '../api/Event';
+import CircularProgress from '@mui/material/CircularProgress';
+import PropTypes from 'prop-types';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 
-function AddEvent(props) {
+const BootstrapDialogTitle = (props) => {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+};
+
+function AddEventFunction(props) {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false)
 
   //date
   const [date, setDate] = React.useState(new Date());
@@ -48,32 +82,64 @@ function AddEvent(props) {
     fontSize: 26,
   }));
 
+  BootstrapDialogTitle.propTypes = {
+    children: PropTypes.node,
+    onClose: PropTypes.func.isRequired,
+  };
+  const [open, setOpen] = useState(false);
+  
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  if (isLoading) {
+    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
+  }
+
   return(
     <LocalizationProvider dateAdapter={AdapterDateFns}>
 
       <Formik
         initialValues={{
-          name: '',
+          title: '',
           description: '',
-          date: '',
+          eventDate: '',
           type: '',
         }}
         validate={(values) => {
           const errors = {};
-          if (!values.name) {
-            errors.name = 'Name is required';
-          } else if (values.name.length < 5) {
-            errors.name = 'Name is too short';
+          if (!values.title) {
+            errors.title = 'Nazwa wymagana';
+          } else if (values.title.length < 5) {
+            errors.title = 'Nazwa jest za krótka';
           }
-          if (!values.date) {
-            errors.date = 'Date is required';
+          if (!values.eventDate) {
+            errors.eventDate = 'Data wymagana';
           }
           if (!values.type) {
-            errors.type = 'Type is required';
+            errors.type = 'Typ wydarzenia jest wymagany';
           }
           return errors; 
         }}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting, setFieldError }) => {
+          try {
+            setSubmitting(true);
+            const data = {
+              ...values,
+              eventDate: values.eventDate.toISOString()
+            }
+            const response = await AddEvent(data)
+            setSubmitting(false)
+            handleClickOpen()
+          } catch (err) {
+            console.log(err.response.data);
+            const { field, errorMessage } = err.response.data;
+            (field && errorMessage) && setFieldError(field, errorMessage);
+          }
+        
           handleAdd();
         }}
       >
@@ -86,7 +152,7 @@ function AddEvent(props) {
                   component={TextField}
                   className="signup-input" 
                   label="Nazwa"
-                  name="name"
+                  name="title"
                   variant="outlined" 
                 />
               </Grid>
@@ -106,7 +172,7 @@ function AddEvent(props) {
               <Grid item xs={12}>
                 <Field
                   component={DatePicker}
-                  name="date"
+                  name="eventDate"
                   inputFormat="dd/MM/yyyy"
                   label="Data"
                   maxDate={Date.now()}
@@ -166,6 +232,22 @@ function AddEvent(props) {
                 >
                   Dodaj
                 </Button>  
+
+                <Dialog maxWidth="sm" fullWidth open={open}>
+                <DialogContent dividers className="signup-dialog-window">
+                  <Typography gutterBottom >
+                    Wydarzenie zostało dodane!
+                  </Typography>
+                </DialogContent>
+                <DialogActions className="signup-dialog-actions">
+                  <Button 
+                    autoFocus 
+                    variant="contained" 
+                    onClick={handleAdd}>
+                    ok
+                  </Button>
+                </DialogActions>
+              </Dialog>
               </Grid>
 
             </Grid>
@@ -176,4 +258,4 @@ function AddEvent(props) {
   );
 }
 
-export default AddEvent;
+export default AddEventFunction;
