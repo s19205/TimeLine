@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -17,6 +17,7 @@ import { TextField } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from './validation/ValidateAutocomplete';
 import { AddEvent } from '../api/Event';
+import { GetEventTypes } from '../api/TypeOfEvent';
 import CircularProgress from '@mui/material/CircularProgress';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
@@ -51,16 +52,18 @@ const BootstrapDialogTitle = (props) => {
 };
 
 function AddEventFunction(props) {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [types, setTypes] = useState([]);
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false)
-
-  //date
-  const [date, setDate] = React.useState(new Date());
+  const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = React.useState(null);
-  const handleChange = (newDate) => {
-    setDate(newDate);
-  };
+
+  useEffect(() => {
+    const fetchTypes = async () => {
+      const response = await GetEventTypes()
+      setTypes(response.data)
+    }
+    fetchTypes()
+  }, [])
 
   const handleAdd = () => {
     dispatch(login());
@@ -127,6 +130,7 @@ function AddEventFunction(props) {
         onSubmit={async (values, { setSubmitting, setFieldError }) => {
           try {
             setSubmitting(true);
+            console.log(file);
             const data = {
               ...values,
               eventDate: values.eventDate.toISOString()
@@ -139,8 +143,6 @@ function AddEventFunction(props) {
             const { field, errorMessage } = err.response.data;
             (field && errorMessage) && setFieldError(field, errorMessage);
           }
-        
-          handleAdd();
         }}
       >
         {({ submitForm, isSubmitting, setFieldTouched, setFieldValue, errors, values, touched }) => (
@@ -187,8 +189,8 @@ function AddEventFunction(props) {
                   name="type"
                   variant="outlined"
                   label="Rodzaj"
-                  options={typesOfEvent}
-                  getOptionLabel={(option) => option.label || ''}
+                  options={types}
+                  getOptionLabel={(option) => option.nameOfEvent || ''}
                   onBlur={() => setFieldTouched('type', true)}
                   error={errors.type}
                   touched={touched.type}
@@ -204,10 +206,10 @@ function AddEventFunction(props) {
                     <AddAPhotoIcon color="action" sx={{ fontSize: 70 }} />
                     <input type="file" hidden onChange={handleFile}></input>
                   </Button>
-                  <Button component="label">
+                  {/* <Button component="label">
                     <VideoCameraBackIcon color="action" sx={{ fontSize: 70 }} />
                     <input type="file" hidden onChange={handleFile}></input>
-                  </Button>
+                  </Button> */}
                 </Grid>
               </Grid>
               <Grid item xs={12}>
