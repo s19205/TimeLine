@@ -18,6 +18,7 @@ import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from './validation/ValidateAutocomplete';
 import { AddEvent } from '../api/Event';
 import { GetEventTypes } from '../api/TypeOfEvent';
+import { AddImage } from '../api/Image';
 import CircularProgress from '@mui/material/CircularProgress';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
@@ -111,6 +112,7 @@ function AddEventFunction(props) {
           description: '',
           eventDate: '',
           type: '',
+          file:'',
         }}
         validate={(values) => {
           const errors = {};
@@ -133,7 +135,9 @@ function AddEventFunction(props) {
             console.log(file);
             const data = {
               ...values,
-              eventDate: values.eventDate.toISOString()
+              type: values.type.idTypeOfEvent,
+              eventDate: values.eventDate.toISOString(),
+              file: file
             }
             const response = await AddEvent(data)
             setSubmitting(false)
