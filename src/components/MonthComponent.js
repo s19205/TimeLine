@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -20,6 +20,9 @@ import { useHistory } from "react-router";
 import { common, amber } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 import DehazeIcon from '@mui/icons-material/Dehaze';
+import { GetEvents } from "../api/Event";
+import { CircularProgress } from "@mui/material";
+import moment from "moment";
 
 const customTheme = createTheme(themes.default, {
   card: {
@@ -40,62 +43,32 @@ const customTheme = createTheme(themes.default, {
   },
 });
 
-const events = [
-  {
-    id: 1,
-    format: 'text',
-    name: 'My birthday',
-    description: 'lolololol',
-    date: '21-01-2021',
-    type: {
-      name: 'birthday',
-      priority: 1, 
-      color: 'red',
-    }
-  },
-  {
-    id: 2,
-    format: 'image',
-    name: 'Trip to the sea',
-    description: 'The best of the best',
-    date: '12-05-2021',
-    type: {
-      name: 'holiday',
-      priority: 2, 
-      color: 'green',
-    },
-    media: 'https://q-xx.bstatic.com/xdata/images/hotel/840x460/78809294.jpg?k=cf850d507a9671cf7ff85d598435ea329a28cd4f1b1abc25c1892c91156d36ad&o='
-  },
-  {
-    id: 3,
-    format: 'text',
-    name: 'Lockdown',
-    description: 'lolololol',
-    date: '16-03-2020',
-    type: {
-      name: 'big-event',
-      priority: 3, 
-      color: 'yellow',
-    }
-  },
-]
-
-//let sortedEvents = events.sort((a, b) =>
- // a.date.split('-').reverse().join().localeCompare(b.date.split('-').reverse().join())); 
-
-let sortedEvents = events.sort((a, b) => new Date(...a.date.split('-').reverse()) - new Date(...b.date.split('-').reverse()));
-
-//events.sort((a, b) => (a.date > b.date) ? 1 : -1)
-
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(common['black']),
 }));
 
 const MonthComponent = (props) => {
-  const [value, setValue] = React.useState(new Date());
+  const [date, setDate] = React.useState(new Date());
+  const [events, setEvents] = React.useState([])
   const history = useHistory()
-  const handleShowEvent = () => {
-    history.push('/show-event');
+  
+  const handleShowEvent = (id) => {
+    history.push(`/show-event/${id}`);
+  }
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoading(true)
+      const response = await GetEvents({ year: +date.getFullYear(), month: +date.getMonth()+1 })
+      setEvents(response.data)
+      setIsLoading(false)
+    }
+    fetchEvents()
+  }, [date])
+
+  if (isLoading) {
+    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
   }
 
   return (
@@ -106,9 +79,9 @@ const MonthComponent = (props) => {
           <DatePicker
             views={['year', 'month']}
             label="Wybrany miesiąc"
-            value={value}
+            value={date}
             onChange={(newValue) => {
-              setValue(newValue);
+              setDate(newValue);
             }}
             renderInput={(params) => <TextField {...params} helperText={null} />}
           />
@@ -118,27 +91,31 @@ const MonthComponent = (props) => {
       <div className="timeline">
         <Timeline theme={customTheme} opts={{ layout: 'alt-evts-inline-date' }}>
           <Events>
-            {sortedEvents.map((event) => (
+            {events.map((event) => (
               event.format === 'text'
               ? (
                 <TextEvent 
                   className="text-event"
-                  date={event.date} 
-                  text={event.name} 
+                  date={moment(event.eventDate).format('DD/MM/YYYY')} 
+                  text={event.title} 
                 >
                   <div className="button-text-event-container">
-                    <ColorButton className="button-text-event"  onClick={handleShowEvent}><DehazeIcon></DehazeIcon></ColorButton>
+                    <ColorButton className="button-text-event"  onClick={handleShowEvent}>
+                      <DehazeIcon />
+                    </ColorButton>
                   </div>
                 </TextEvent>
               )
               : (
                 <ImageEvent
-                  date={event.date}
-                  text={event.name}
-                  src={event.media}
+                  date={moment(event.eventDate).format('DD/MM/YYYY')}
+                  text={event.title}
+                  src={event.fileUrl}
                 >
                   <div className="button-text-event-container">
-                    <ColorButton className="button-text-event" onClick={handleShowEvent}><DehazeIcon></DehazeIcon></ColorButton>
+                    <ColorButton className="button-text-event" onClick={handleShowEvent}>
+                      <DehazeIcon />
+                    </ColorButton>
                   </div>
                 </ImageEvent>
               )

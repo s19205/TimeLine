@@ -25,13 +25,13 @@ function ShowEvent(props) {
     type: '',
     file: ''
   });
-
+  const { id } = props.match.params
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchEventData = async () => {
       setIsLoading(true)
-      const response = await GetEvent()
+      const response = await GetEvent(id)
       setEventData(response.data)
       setIsLoading(false)
     }
