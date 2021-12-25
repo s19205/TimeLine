@@ -1,14 +1,11 @@
-import React, { useState } from "react";
-// import TextField from '@mui/material/TextField';
+import React, { useState, useEffect } from "react";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-// import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { Grid, IconButton } from "@mui/material";
 import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../redux/userSlice';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-// import Autocomplete from '@mui/material/Autocomplete';
 import typesOfEvent from "../constants/typesOfEvent";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
@@ -16,27 +13,76 @@ import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from './validation/ValidateAutocomplete';
+import { GetEventTypes } from '../api/TypeOfEvent';
+import { GetEvent, UpdateEvent } from '../api/Event';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import CloseIcon from '@mui/icons-material/Close';
+import PropTypes from 'prop-types';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+
+const BootstrapDialogTitle = (props) => {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+};
 
 function EditEvent(props) {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const dispatch = useDispatch();
+  const [types, setTypes] = useState([]);
+  const [eventData, setEventData] = useState({
+    title: '',
+    description: '',
+    eventDate: null,
+    type: '',
+    file: ''
+  });
+  const [isLoading, setIsLoading] = useState(false)
 
-  //date
-  const [date, setDate] = React.useState(new Date());
-  const [file, setFile] = React.useState(null);
-  const handleChange = (newDate) => {
-    setDate(newDate);
-  };
+  useEffect(() => {
+    const fetchEventData = async () => {
+      setIsLoading(true)
+      const response = await GetEvent()
+      setEventData(response.data)
+      setIsLoading(false)
+    }
+    fetchEventData()
+  }, [])
+
+  useEffect(() => {
+    const fetchTypes = async () => {
+      const response = await GetEventTypes()
+      setTypes(response.data)
+    }
+    fetchTypes()
+  }, [])
 
   const handleBack = () => {
-    dispatch(login());
-    props.history.push('/show-event');
-  }
-  const handleEdit = () => {
-    dispatch(login());
     props.history.push('/show-event');
   }
 
+//
+  const [file, setFile] = React.useState(null);
   const handleFile = (event) => {
     const file = event.target.files[0];
     setFile(file);
@@ -48,33 +94,67 @@ function EditEvent(props) {
     fontSize: 26,
   }));
 
+  BootstrapDialogTitle.propTypes = {
+    children: PropTypes.node,
+    onClose: PropTypes.func.isRequired,
+  };
+  const [open, setOpen] = useState(false);
+  
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  if (isLoading) {
+    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
+  }
+
   return(
     <LocalizationProvider dateAdapter={AdapterDateFns}>
 
       <Formik
         initialValues={{
-          name: '',
-          description: '',
-          date: '',
-          type: '',
+          title: eventData.title ? eventData.title : '',
+          description: eventData.description ? eventData.description : '',
+          eventDate: new Date(eventData.eventDate),
+          type: eventData.type ? eventData.type.typeName : '',
+          file: eventData.file ? eventData.file : '',
         }}
         validate={(values) => {
           const errors = {};
-          if (!values.name) {
-            errors.name = 'Name is required';
-          } else if (values.name.length <= 5) {
-            errors.name = 'Name is too short';
+          if (!values.title) {
+            errors.title = 'Nazwa wymagana';
+          } else if (values.title.length <= 5) {
+            errors.title = 'Nazwa jest za krótka';
           }
-          if (!values.date) {
-            errors.date = 'Date is required';
+          if (!values.eventDate) {
+            errors.eventDate = 'Data wymagana';
           }
           if (!values.type) {
-            errors.type = 'Type is required';
+            errors.type = 'Typ wydarzenia jest wymagany';
           }
           return errors; 
         }}
-        onSubmit={(values, { setSubmitting }) => {
-          handleEdit();
+        onSubmit={async (values, { setSubmitting, setFieldError }) => {
+          
+          try {
+            setSubmitting(true)
+            const data = {
+              ...values,
+              type: values.type.idTypeOfEvent,
+              eventDate: values.eventDate.toISOString(),
+              file: file
+            }
+            const response = await UpdateEvent(data)
+            setSubmitting(false)
+            handleClickOpen()
+          } catch (err) {
+            console.log(err.response.data);
+            const { field, errorMessage } = err.response.data;
+            (field && errorMessage) && setFieldError(field, errorMessage);
+          }
         }}
       >
         {({ submitForm, isSubmitting, setFieldTouched, setFieldValue, errors, values, touched }) => (
@@ -86,7 +166,7 @@ function EditEvent(props) {
                   component={TextField}
                   className="signup-input" 
                   label="Nazwa"
-                  name="name"
+                  name="title"
                   variant="outlined" 
                 />
               </Grid>
@@ -106,7 +186,7 @@ function EditEvent(props) {
               <Grid item xs={12}>
                 <Field
                   component={DatePicker}
-                  name="date"
+                  name="eventDate"
                   inputFormat="dd/MM/yyyy"
                   label="Data"
                   maxDate={Date.now()}
@@ -121,8 +201,8 @@ function EditEvent(props) {
                   name="type"
                   variant="outlined"
                   label="Rodzaj"
-                  options={typesOfEvent}
-                  getOptionLabel={(option) => option.label || ''}
+                  options={types}
+                  getOptionLabel={(option) => option.nameOfEvent || ''}
                   onBlur={() => setFieldTouched('type', true)}
                   error={errors.type}
                   touched={touched.type}
@@ -138,10 +218,7 @@ function EditEvent(props) {
                     <AddAPhotoIcon color="action" sx={{ fontSize: 70 }} />
                     <input type="file" hidden onChange={handleFile}></input>
                   </Button>
-                  <Button component="label">
-                    <VideoCameraBackIcon color="action" sx={{ fontSize: 70 }} />
-                    <input type="file" hidden onChange={handleFile}></input>
-                  </Button>
+                  
                 </Grid>
               </Grid>
               <Grid item xs={12}>
@@ -166,8 +243,23 @@ function EditEvent(props) {
                 >
                   Zachowaj
                 </Button>  
-              </Grid>
 
+                <Dialog maxWidth="sm" fullWidth open={open}>
+                  <DialogContent dividers className="signup-dialog-window">
+                    <Typography gutterBottom >
+                      Dane wydarzenia zostały zmienione!
+                    </Typography>
+                  </DialogContent>
+                  <DialogActions className="signup-dialog-actions">
+                    <Button 
+                      autoFocus 
+                      variant="contained" 
+                      onClick={handleBack}>
+                      ok
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </Grid>
             </Grid>
           </Form>
         )}

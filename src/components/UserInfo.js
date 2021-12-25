@@ -39,7 +39,6 @@ function UserInfo(props) {
     fetchUserData()
   }, [])
 
-  //dashboard
   const handleEdit = () => {
     props.history.push('/edit-user-info');
   }

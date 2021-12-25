@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, NavLink, Redirect } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Home from './components/Home';
@@ -49,15 +49,13 @@ function App() {
             <PublicRoute path="/login" component={Login} />
             <PublicRoute path="/signup" component={Signup} />
             <PrivateRoute path="/dashboard" component={Dashboard} />
-
             <PrivateRoute path="/user-info" component={UserInfo} />
             <PrivateRoute path="/edit-user-info" component={UserInfoEdit} />
-
             <PrivateRoute path="/add-event" component={AddEvent} />
             <PrivateRoute path="/show-event" component={ShowEvent} />
             <PrivateRoute path="/edit-event" component={EditEvent} />
-
             <PrivateRoute path="/settings" component={Settings} />
+            <Route path='*' render={() => <Redirect to='/dashboard' />} />
           </Switch>
         </div>
       </BrowserRouter>

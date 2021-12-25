@@ -18,7 +18,6 @@ import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from './validation/ValidateAutocomplete';
 import { AddEvent } from '../api/Event';
 import { GetEventTypes } from '../api/TypeOfEvent';
-import { AddImage } from '../api/Image';
 import CircularProgress from '@mui/material/CircularProgress';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
@@ -68,7 +67,7 @@ function AddEventFunction(props) {
 
   const handleAdd = () => {
     dispatch(login());
-    props.history.push('/show-event');
+    props.history.push('/dashboard');
   }
   const handleBack = () => {
     dispatch(login());

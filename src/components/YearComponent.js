@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -20,6 +20,8 @@ import { useHistory } from "react-router";
 import { common, amber } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 import DehazeIcon from '@mui/icons-material/Dehaze';
+import { GetEvents } from "../api/Event";
+import { CircularProgress } from "@mui/material";
 
 const customTheme = createTheme(themes.default, {
   card: {
@@ -40,7 +42,7 @@ const customTheme = createTheme(themes.default, {
   },
 });
 
-const events = [
+/*const events = [
   {
     id: 1,
     format: 'text',
@@ -78,12 +80,12 @@ const events = [
       color: 'yellow',
     }
   },
-]
+]*/
 
 //let sortedEvents = events.sort((a, b) =>
  // a.date.split('-').reverse().join().localeCompare(b.date.split('-').reverse().join())); 
 
-let sortedEvents = events.sort((a, b) => new Date(...a.date.split('-').reverse()) - new Date(...b.date.split('-').reverse()));
+//let sortedEvents = events.sort((a, b) => new Date(...a.date.split('-').reverse()) - new Date(...b.date.split('-').reverse()));
 
 //events.sort((a, b) => (a.date > b.date) ? 1 : -1)
 
@@ -91,11 +93,29 @@ const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(common['black']),
 }));
 
-const YearComponent = () => {
-  const [value, setValue] = React.useState(new Date());
+const YearComponent = (props) => {
+  const [year, setYear] = React.useState(new Date());
+  const [events, setEvents] = React.useState([])
   const history = useHistory()
+
   const handleShowEvent = () => {
     history.push('/show-event');
+  }
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoading(true)
+      const response = await GetEvents({ year: +year.getFullYear() })
+      setEvents(response.data)
+      setIsLoading(false)
+    }
+    fetchEvents()
+  }, [year])
+
+  if (isLoading) {
+    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
   }
 
   return (
@@ -106,9 +126,9 @@ const YearComponent = () => {
           <DatePicker
             views={['year']}
             label="Wybrany rok"
-            value={value}
+            value={year}
             onChange={(newValue) => {
-              setValue(newValue);
+              setYear(newValue);
             }}
             renderInput={(params) => <TextField {...params} helperText={null} />}
           />
@@ -118,7 +138,7 @@ const YearComponent = () => {
       <div className="timeline">
       <Timeline theme={customTheme} opts={{ layout: 'alt-evts-inline-date' }}>
           <Events>
-            {sortedEvents.map((event) => (
+            {events.map((event) => (
               event.format === 'text'
               ? (
                 <TextEvent 

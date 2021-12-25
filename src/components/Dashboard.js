@@ -43,7 +43,6 @@ const StyledRadio = (props) => {
 }
 
 function Dashboard(props) {
-  const [date, setDate] = React.useState([null, null]);
   const dispatch = useDispatch();
   const [value, setValue] = React.useState('1');
 
@@ -71,60 +70,14 @@ function Dashboard(props) {
               </TabList>
             </Box>
             <TabPanel value="1">
-              <YearComponent></YearComponent>
+              <YearComponent />
             </TabPanel>
 
             <TabPanel value="2">
-              <MonthComponent></MonthComponent>
+              <MonthComponent />
             </TabPanel>
           </TabContext>
         </Box>
-
-
-
-
-        {/* <div className="show-group">
-          <FormControl >
-            <FormLabel
-              sx={{
-                color: "white",
-                "&.Mui-focused": {
-                  color: "white"
-                }
-              }}
-            >
-              Pokaż
-            </FormLabel>
-            <RadioGroup 
-              aria-label="show"
-              defaultValue="month"
-              name="show-group"
-            >
-              <FormControlLabel value="year" control={<StyledRadio />} label="Lata" />
-              <FormControlLabel value="month" control={<StyledRadio />} label="Miesiące" />
-              <FormControlLabel value="day" control={<StyledRadio />} label="Dni" />
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Stack spacing={3}>
-                  <MobileDateRangePicker
-                    startText="Start"
-                    value={date}
-                    onChange={(newValue) => {
-                      setDate(newValue);
-                    }}
-                    renderInput={(startProps, endProps) => (
-                      <React.Fragment>
-                        <TextField {...startProps} />
-                        <Box sx={{ mx: 2 }}> to </Box>
-                        <TextField {...endProps} />
-                      </React.Fragment>
-                    )}
-                  />
-                </Stack>
-              </LocalizationProvider>
-            </RadioGroup>
-          </FormControl>
-        </div> */}
-
         <Button 
           className="add-event-button" 
           variant="outlined" 
@@ -135,24 +88,6 @@ function Dashboard(props) {
           Nowe wydarzenie
         </Button>
       </div>
-
-      {/* <div className="timeline-container"
-        <div className="card-container">
-          <Card className="main-card" sx={{ maxWidth: 300, color: "white", background: "#F16155" }}>
-            <CardActionArea onClick={handleShowEvent}>
-              <CardContent className="card-content">
-                <Typography gutterBottom variant="h4" component="div">
-                  Urodziny
-                </Typography>
-                <Typography variant="body2" color="white">
-                  20/10/2021
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </div>
-      </div> */}
-
     </div>
   );
 }

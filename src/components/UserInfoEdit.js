@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from "react";
-// import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-// import Autocomplete from '@mui/material/Autocomplete';
 import { Grid } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import Radio from '@mui/material/Radio';
-// import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import './Signup.css';
-//import countries from "../constants/countries";
-import { useDispatch } from 'react-redux';
-import { login } from '../redux/userSlice';
 import { Formik, Form, Field } from 'formik';
 import { TextField, RadioGroup } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
@@ -58,7 +52,6 @@ const BootstrapDialogTitle = (props) => {
 
 function UserInfoEdit(props) {
   const [countries, setCountries] = useState([])
-  const dispatch = useDispatch();
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -84,19 +77,10 @@ function UserInfoEdit(props) {
     fetchCountries()
   }, [])
 
-  //date
-  const [date, setDate] = React.useState(new Date());
-  const handleChange = (newDate) => {
-    setDate(newDate);
-  };
-
   const handleBack = () => {
-    dispatch(login());
     props.history.push('/user-info');
   }
-
   const handleSave = () => {
-    dispatch(login());
     props.history.push('/user-info');
   }
 
