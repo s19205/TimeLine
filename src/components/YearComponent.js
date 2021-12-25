@@ -90,40 +90,48 @@ const YearComponent = (props) => {
         </LocalizationProvider>
       </div>
       <div className="timeline">
-      <Timeline theme={customTheme} opts={{ layout: 'alt-evts-inline-date' }}>
-          <Events>
-            {events.map((event) => (
-              event.format === 'text'
-              ? (
-                <TextEvent 
-                  className="text-event"
-                  date={moment(event.eventDate).format('DD/MM/YYYY')} 
-                  text={event.title} 
-                >
-                  <div className="button-text-event-container">
-                    <ColorButton className="button-text-event" onClick={() => handleShowEvent(event.idEvent)}>
-                      <DehazeIcon />
-                    </ColorButton>
-                  </div>
-                </TextEvent>
-              )
-              : (
-                <ImageEvent
-                  date={moment(event.eventDate).format('DD/MM/YYYY')}
-                  text={event.title}
-                  src={event.fileUrl}
-                >
-                  <div className="button-text-event-container">
-                    <ColorButton className="button-text-event" onClick={() => handleShowEvent(event.idEvent)}>
-                      <DehazeIcon />
-                    </ColorButton>
-                  </div>
-                </ImageEvent>
-              )
-              ))}
+      {events.length > 0
+        ? (
 
-          </Events>
-        </Timeline>
+        <Timeline theme={customTheme} opts={{ layout: 'alt-evts-inline-date' }}>
+            <Events>
+              {events.map((event) => (
+                event.format === 'text'
+                ? (
+                  <TextEvent 
+                    className="text-event"
+                    date={moment(event.eventDate).format('DD/MM/YYYY')} 
+                    text={event.title} 
+                  >
+                    <div className="button-text-event-container">
+                      <ColorButton className="button-text-event" onClick={() => handleShowEvent(event.idEvent)}>
+                        <DehazeIcon />
+                      </ColorButton>
+                    </div>
+                  </TextEvent>
+                )
+                : (
+                  <ImageEvent
+                    date={moment(event.eventDate).format('DD/MM/YYYY')}
+                    text={event.title}
+                    src={event.fileUrl}
+                  >
+                    <div className="button-text-event-container">
+                      <ColorButton className="button-text-event" onClick={() => handleShowEvent(event.idEvent)}>
+                        <DehazeIcon />
+                      </ColorButton>
+                    </div>
+                  </ImageEvent>
+                )
+                ))}
+
+            </Events>
+          </Timeline>
+        )
+        : (
+         <div>No events</div>
+        )
+      }
       </div>
     </div>
   );

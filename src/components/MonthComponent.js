@@ -89,6 +89,8 @@ const MonthComponent = (props) => {
         </LocalizationProvider>
       </div>
       <div className="timeline">
+      {events.length > 0
+        ? (
         <Timeline theme={customTheme} opts={{ layout: 'alt-evts-inline-date' }}>
           <Events>
             {events.map((event) => (
@@ -100,7 +102,7 @@ const MonthComponent = (props) => {
                   text={event.title} 
                 >
                   <div className="button-text-event-container">
-                    <ColorButton className="button-text-event"  onClick={handleShowEvent}>
+                    <ColorButton className="button-text-event"  onClick={() => handleShowEvent(event.idEvent)}>
                       <DehazeIcon />
                     </ColorButton>
                   </div>
@@ -113,7 +115,7 @@ const MonthComponent = (props) => {
                   src={event.fileUrl}
                 >
                   <div className="button-text-event-container">
-                    <ColorButton className="button-text-event" onClick={handleShowEvent}>
+                    <ColorButton className="button-text-event" onClick={() => handleShowEvent(event.idEvent)}>
                       <DehazeIcon />
                     </ColorButton>
                   </div>
@@ -123,6 +125,11 @@ const MonthComponent = (props) => {
 
           </Events>
         </Timeline>
+        )
+        : (
+          <div>No events</div>
+        )
+      }
       </div>
     </div>
   );

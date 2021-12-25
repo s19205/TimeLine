@@ -12,6 +12,10 @@ export function GetEvent(id) {
   return axios.get(`/event/${id}/`);
 };
 
+export function DeleteEvent(id) {
+  return axios.delete(`/event/${id}/`);
+};
+
 export function UpdateEvent(data) {
   return axios.get('/event/edit/', getFormData(data), { headers: { 'Content-Type': 'multipart/form-data' } });
 };

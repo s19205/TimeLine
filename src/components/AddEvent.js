@@ -8,8 +8,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../redux/userSlice';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-// import Autocomplete from '@mui/material/Autocomplete';
-import typesOfEvent from "../constants/typesOfEvent";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { Formik, Form, Field } from 'formik';
