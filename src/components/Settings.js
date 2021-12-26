@@ -6,15 +6,30 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContentText from '@mui/material/DialogContentText';
 
 export default function VerticalTabs() {
   const [currentEventId, setCurrentEventId] = useState(0)
+  const [showUpdateMail, setShowUpdateMail] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
+  
+  const handleShowUpdateMail = () => {
+    setShowUpdateMail(true);
+  }
+  const handleCloseUpdateMail = () => {
+    setShowUpdateMail(false);
+  }
 
   const handleShowDelete = (id) => {
-    setCurrentEventId(id)
-    setShowDelete(true)
+    setCurrentEventId(id);
+    setShowDelete(true);
+  }
+  const handleCloseDelete = () => {
+    setShowDelete(false);
   }
 
   return (
@@ -42,9 +57,30 @@ export default function VerticalTabs() {
                   autoFocus 
                   className="userdata-input-button"
                   variant="contained" 
-                  onClick="">
+                  onClick={handleShowUpdateMail}>
                   Zmień
                 </Button>
+                <Dialog open={showUpdateMail} onClose={handleCloseUpdateMail}>
+                  <DialogTitle>Zmiana maila</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Uprzejmie prosimy o podanie prawdziwego adresu e-mail, ponieważ w przyszłości będziesz mógł potwierdzić swoje konto tym e-mailem
+                    </DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      label="Adres e-mail"
+                      type="email"
+                      fullWidth
+                      variant="standard"
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseUpdateMail}>Powrót</Button>
+                    <Button onClick={handleCloseUpdateMail} variant="contained">Zmienić</Button>
+                  </DialogActions>
+                </Dialog>
               </Grid>
             </Grid>
             <Grid item container xs={12} alignItems="center" justifyContent="center">
@@ -80,6 +116,27 @@ export default function VerticalTabs() {
                 onClick={() => handleShowDelete(1)}>
                 Usuń konto
               </Button>
+              <Dialog
+                open={showDelete}
+                onClose={handleCloseDelete}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {"Czy napewno chcesz usunąć konto?"}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Usunięcie konta oznacza nieodwołalne usunięcie wszystkich możliwych danych z nim związanych.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseDelete}>Usunąć</Button>
+                  <Button onClick={handleCloseDelete} variant="contained">
+                    Powrót
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Grid>
           </Grid>
         </div>
