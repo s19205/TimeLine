@@ -1,0 +1,50 @@
+.profile-page-container {
+  display: flex;
+  flex-direction: column;
+}
+.userdata-container, .event-type-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 15px;
+}
+
+.grid-data-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 25px;
+  width: 50%;
+}
+
+.grid-type-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 25px;
+  width: 40%;
+}
+
+.userdata-input {
+  width: 450px;
+}
+
+.name-type-input {
+  width: 300px;
+}
+
+.divider {
+  padding: 5px 0;
+  width: 60%;
+}
+
+.userdata-input-button {
+  width: 180px;
+  height: 40px;
+}
+
+.container-title {
+  width: 40%;
+  text-align: left;
+  font-size: 18px;
+  font-weight: 600;
+}

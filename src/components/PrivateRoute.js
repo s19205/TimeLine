@@ -4,13 +4,14 @@ import { Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const PrivateRoute = ({ component: Component, children, ...rest}) => {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const token = window.localStorage.getItem('access_token');
+
   return (
     <>
       <Route
         {...rest} render={(props) => (
           <>
-            {isLoggedIn
+            {token
               ? (<> <Component {...props} /> </>)
               : <Redirect to='/login' />}
           </>
