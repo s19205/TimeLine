@@ -23,6 +23,7 @@ import DehazeIcon from '@mui/icons-material/Dehaze';
 import { GetEvents } from "../api/Event";
 import { CircularProgress } from "@mui/material";
 import moment from "moment";
+import Image from "../photos/nothing_present.gif";
 
 const customTheme = createTheme(themes.default, {
   card: {
@@ -66,6 +67,12 @@ const MonthComponent = (props) => {
     }
     fetchEvents()
   }, [date])
+
+  const Div = styled('div')(({ theme }) => ({
+    ...theme.typography.button,
+    padding: theme.spacing(2),
+    fontSize: 23,
+  }));
 
   if (isLoading) {
     return <div sx={{ display: 'flex' }}><CircularProgress /></div>
@@ -127,7 +134,10 @@ const MonthComponent = (props) => {
         </Timeline>
         )
         : (
-          <div>No events</div>
+          <div>
+            <img src={Image} width="300" />
+            <Div>{"Ups... Niestety nie było żadnych wydarzeń w tym miesiącu"}</Div>
+          </div>
         )
       }
       </div>

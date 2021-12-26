@@ -16,8 +16,8 @@ export function DeleteEvent(id) {
   return axios.delete(`/event/${id}/`);
 };
 
-export function UpdateEvent(data) {
-  return axios.get('/event/edit/', getFormData(data), { headers: { 'Content-Type': 'multipart/form-data' } });
+export function UpdateEvent(id, data) {
+  return axios.post(`/event/${id}/`, getFormData(data), { headers: { 'Content-Type': 'multipart/form-data' } });
 };
 
 const getFormData = object => Object.keys(object).reduce((formData, key) => {

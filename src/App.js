@@ -53,7 +53,7 @@ function App() {
             <PrivateRoute path="/edit-user-info" component={UserInfoEdit} />
             <PrivateRoute path="/add-event" component={AddEvent} />
             <PrivateRoute path="/show-event/:id" component={ShowEvent} />
-            <PrivateRoute path="/edit-event" component={EditEvent} />
+            <PrivateRoute path="/edit-event/:id" component={EditEvent} />
             <PrivateRoute path="/settings" component={Settings} />
             <Route path='*' render={() => <Redirect to='/dashboard' />} />
           </Switch>

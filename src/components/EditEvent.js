@@ -54,15 +54,16 @@ function EditEvent(props) {
     title: '',
     description: '',
     eventDate: null,
-    type: '',
+    idTypeOfEvent: '',
     file: ''
   });
+  const { id } = props.match.params
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchEventData = async () => {
       setIsLoading(true)
-      const response = await GetEvent()
+      const response = await GetEvent(id)
       setEventData(response.data)
       setIsLoading(false)
     }
@@ -119,7 +120,7 @@ function EditEvent(props) {
           title: eventData.title ? eventData.title : '',
           description: eventData.description ? eventData.description : '',
           eventDate: new Date(eventData.eventDate),
-          type: eventData.type ? eventData.type.typeName : '',
+          type: eventData.idTypeOfEvent ? types.find(e => e.idTypeOfEvent === eventData.idTypeOfEvent) : '',
           file: eventData.file ? eventData.file : '',
         }}
         validate={(values) => {
@@ -147,7 +148,7 @@ function EditEvent(props) {
               eventDate: values.eventDate.toISOString(),
               file: file
             }
-            const response = await UpdateEvent(data)
+            const response = await UpdateEvent(id, data)
             setSubmitting(false)
             handleClickOpen()
           } catch (err) {
@@ -160,7 +161,7 @@ function EditEvent(props) {
         {({ submitForm, isSubmitting, setFieldTouched, setFieldValue, errors, values, touched }) => (
           <Form>
             <Div>{"Edycja wydarzenia"}</Div>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} style={{ paddingBottom: '20px' }}>
               <Grid item xs={12}>
                 <Field 
                   component={TextField}
@@ -208,17 +209,34 @@ function EditEvent(props) {
                   touched={touched.type}
                   onChange={(event, values) => setFieldValue('type', values)}
                   value={values.type}
+                  defaultValue={values.type}
                 />
               </Grid>
 
+              {
+                eventData.mediaFileUrl != null
+                ? (
+                  <Grid item container xs={12} justifyContent="center">
+                    <img 
+                      className="view-image"
+                      src={eventData.mediaFileUrl}
+                      height='400px'
+                      width='400px'
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </Grid>
+                )
+                : (
+                  <div></div>
+                )
+              }
               <Grid item xs={12}>
-              <Div sx={{ fontSize: 20 }}>{"Dodaj media"}</Div>
+                <Div sx={{ fontSize: 20 }}>{"Zmień media"}</Div>
                 <Grid item container xs={12} justifyContent="center" style={{ gap: '30px' }}>
-                <Button component="label"> 
+                  <Button component="label"> 
                     <AddAPhotoIcon color="action" sx={{ fontSize: 70 }} />
                     <input type="file" hidden onChange={handleFile}></input>
                   </Button>
-                  
                 </Grid>
               </Grid>
               <Grid item xs={12}>

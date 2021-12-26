@@ -207,10 +207,6 @@ function AddEventFunction(props) {
                     <AddAPhotoIcon color="action" sx={{ fontSize: 70 }} />
                     <input type="file" hidden onChange={handleFile}></input>
                   </Button>
-                  {/* <Button component="label">
-                    <VideoCameraBackIcon color="action" sx={{ fontSize: 70 }} />
-                    <input type="file" hidden onChange={handleFile}></input>
-                  </Button> */}
                 </Grid>
               </Grid>
               <Grid item xs={12}>

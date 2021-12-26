@@ -15,6 +15,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -47,7 +48,7 @@ function ShowEvent(props) {
     description: '',
     eventDate: null,
     idTypeOfEvent: '',
-    file: ''
+    mediaFileUrl: ''
   });
   const { id } = props.match.params
   const [isLoading, setIsLoading] = useState(false)
@@ -74,6 +75,10 @@ function ShowEvent(props) {
     props.history.push(`/edit-event/${id}`);
   }
   const handleBack = () => {
+    props.history.push('/dashboard');
+  }
+  const handleDelete = async () => {
+    await DeleteEvent(id);
     props.history.push('/dashboard');
   }
 
@@ -103,7 +108,7 @@ function ShowEvent(props) {
   return(
     <>
       <Div>{"Detale"}</Div>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} style={{ paddingBottom: '20px' }}>
         <Grid item xs={12}>
           <TextField 
             className="signup-input" 
@@ -121,6 +126,7 @@ function ShowEvent(props) {
             className="signup-input" 
             name="description"
             defaultValue={eventData.description}
+            multiline
             label="Opis" 
             variant="outlined" 
             InputProps={{
@@ -151,74 +157,75 @@ function ShowEvent(props) {
             }} 
           />
         </Grid>
-        <Grid item container xs={12} justifyContent="center">
-          <Div>{"Media"}</Div>
-        </Grid>
+        {
+          eventData.mediaFileUrl != null 
+          ? (
+            <Grid item container xs={12} justifyContent="center">
+              <img 
+                className="view-image"
+                src={eventData.mediaFileUrl}
+                height='400px'
+                width='400px'
+                style={{ objectFit: 'cover' }}
+              />
+            </Grid>
+          ) 
+          : (
+            <div></div>
+          )
+        }
+        
         <Grid item container xs={12} justifyContent="center" style={{ gap: '15px' }}>
-            <Button 
-              variant="outlined" 
-              className="signup-input-button" 
-              onClick={handleBack}
-            >
-              Powrót
-            </Button>
-            <Button 
-              variant="contained" 
-              className="signup-input-button" 
-              onClick={handleEdit}
-            >
-              Edytuj
-            </Button>  
-            <Button 
-              variant="contained" 
-              className="signup-input-button" 
-              onClick={handleClickOpen}
-            >
-              Usuń
-            </Button>
-
-            <Dialog maxWidth="sm" fullWidth open={open}>
-                <DialogContent dividers className="signup-dialog-window">
-                  <Typography gutterBottom >
-                    Czy na pewno chcesz usunąć wydarzenie?
-                  </Typography>
-                </DialogContent>
-                <DialogActions className="signup-dialog-actions">
-                  <Button 
-                    autoFocus 
-                    variant="contained" 
-                    onClick={DeleteEvent(id)}>
-                    tak
-                  </Button>
-                  <Button 
-                    autoFocus 
-                    variant="contained" 
-                    onClick={handleClose}>
-                    nie
-                  </Button>
-                </DialogActions>
-            </Dialog>
-
-            {/* <Dialog maxWidth="sm" fullWidth open={open}>
-                <DialogContent dividers className="signup-dialog-window">
-                  <Typography gutterBottom >
-                    Wydarzenie zostało usunięte!
-                  </Typography>
-                </DialogContent>
-                <DialogActions className="signup-dialog-actions">
-                  <Button 
-                    autoFocus 
-                    variant="contained" 
-                    onClick={handleBack}>
-                    ok
-                  </Button>
-                </DialogActions>
-            </Dialog> */}
+          <Button 
+            variant="outlined" 
+            className="signup-input-button" 
+            onClick={handleBack}
+          >
+            Powrót
+          </Button>
+          <Button 
+            variant="contained" 
+            className="signup-input-button" 
+            onClick={handleEdit}
+          >
+            Edytuj
+          </Button>              
+        </Grid>
+        <Grid item container xs={12} justifyContent="center">
+          <Button 
+            variant="outlined" 
+            className="signup-input-button" 
+            startIcon={<DeleteIcon />}
+            color="error"
+            onClick={handleClickOpen}
+          >
+            Usuń
+          </Button>
+        
+          <Dialog maxWidth="sm" fullWidth open={open}>
+            <DialogContent dividers className="signup-dialog-window">
+              <Typography gutterBottom >
+                Czy na pewno chcesz usunąć wydarzenie?
+              </Typography>
+            </DialogContent>
+            <DialogActions className="signup-dialog-actions">
+              <Button 
+                autoFocus 
+                variant="contained" 
+                onClick={handleDelete}>
+                tak
+              </Button>
+              <Button 
+                autoFocus 
+                variant="contained" 
+                onClick={handleClose}>
+                nie
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
       </Grid>
     </>
-
-  
   );
 }
 
