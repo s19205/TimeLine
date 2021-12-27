@@ -15,13 +15,24 @@ import DialogContentText from '@mui/material/DialogContentText';
 export default function VerticalTabs() {
   const [currentEventId, setCurrentEventId] = useState(0)
   const [showUpdateMail, setShowUpdateMail] = useState(false)
+  const [showUpdatePassword, setShowUpdatePassword] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
+  const [showUpdateType, setShowUpdateType] = useState(false)
+  const [showDeleteType, setShowDeleteType] = useState(false)
+  const [showAddType, setShowAddType] = useState(false)
   
   const handleShowUpdateMail = () => {
     setShowUpdateMail(true);
   }
   const handleCloseUpdateMail = () => {
     setShowUpdateMail(false);
+  }
+
+  const handleShowUpdatePassword = () => {
+    setShowUpdatePassword(true);
+  }
+  const handleCloseUpdatePassword = () => {
+    setShowUpdatePassword(false);
   }
 
   const handleShowDelete = (id) => {
@@ -31,6 +42,28 @@ export default function VerticalTabs() {
   const handleCloseDelete = () => {
     setShowDelete(false);
   }
+
+  const handleShowUpdateType = () => {
+    setShowUpdateType(true);
+  }
+  const handleCloseUpdateType = () => {
+    setShowUpdateType(false);
+  }
+
+  const handleShowDeleteType = () => {
+    setShowDeleteType(true);
+  }
+  const handleCloseDeleteType = () => {
+    setShowDeleteType(false);
+  }
+
+  const handleShowAddType = () => {
+    setShowAddType(true);
+  }
+  const handleCloseAddType = () => {
+    setShowAddType(false);
+  }
+
 
   return (
     <div className="profile-page-container">
@@ -54,7 +87,6 @@ export default function VerticalTabs() {
               </Grid>
               <Grid item xs={2} justifyContent="center" style={{ gap: '15px' }}>
                 <Button 
-                  autoFocus 
                   className="userdata-input-button"
                   variant="contained" 
                   onClick={handleShowUpdateMail}>
@@ -67,9 +99,8 @@ export default function VerticalTabs() {
                       Uprzejmie prosimy o podanie prawdziwego adresu e-mail, ponieważ w przyszłości będziesz mógł potwierdzić swoje konto tym e-mailem
                     </DialogContentText>
                     <TextField
-                      autoFocus
                       margin="dense"
-                      id="name"
+                      id="mail"
                       label="Adres e-mail"
                       type="email"
                       fullWidth
@@ -91,6 +122,7 @@ export default function VerticalTabs() {
                   defaultValue="password"
                   label="Hasło" 
                   variant="outlined" 
+                  type="password"
                   InputProps={{
                     readOnly: true,
                   }} 
@@ -98,17 +130,51 @@ export default function VerticalTabs() {
               </Grid>
               <Grid item xs={2} justifyContent="center" style={{ gap: '15px' }}>
                 <Button 
-                  autoFocus 
                   className="userdata-input-button"
                   variant="contained" 
-                  onClick="">
+                  onClick={handleShowUpdatePassword}>
                   Zmień
                 </Button>
+                <Dialog open={showUpdatePassword} onClose={handleCloseUpdatePassword}>
+                  <DialogTitle>Zmiana hasła</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      autoComplete="off"
+                      margin="dense"
+                      id="oldpass"
+                      label="Stare hasło"
+                      type="password"
+                      fullWidth
+                      variant="standard"
+                    />
+                    <TextField
+                      autoComplete="off"
+                      margin="dense"
+                      id="newPass"
+                      label="Nowe hasło"
+                      type="password"
+                      fullWidth
+                      variant="standard"
+                    />
+                    <TextField
+                      autoComplete="off"
+                      margin="dense"
+                      id="repeatNewPass"
+                      label="Powtórz nowe hasło"
+                      type="password"
+                      fullWidth
+                      variant="standard"
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseUpdatePassword}>Powrót</Button>
+                    <Button onClick={handleCloseUpdatePassword} variant="contained">Zmienić</Button>
+                  </DialogActions>
+                </Dialog>
               </Grid>
             </Grid>
             <Grid item xs={12} style={{ paddingTop: '30px' }}>
-              <Button 
-                autoFocus 
+              <Button
                 className="userdata-input-button"
                 variant="outlined" 
                 startIcon={<DeleteIcon />}
@@ -140,7 +206,6 @@ export default function VerticalTabs() {
             </Grid>
           </Grid>
         </div>
-        
       </div>
       
       <div className="event-type-container">
@@ -161,23 +226,77 @@ export default function VerticalTabs() {
             </Grid>
             <Grid item xs={3}>
               <Button 
-                autoFocus 
                 className="userdata-input-button"
                 variant="contained" 
-                onClick="">
+                onClick={handleShowUpdateType}>
                 Zmień
               </Button>
+              <Dialog open={showUpdateType} onClose={handleCloseUpdateType}>
+                  <DialogTitle>Edycja typ wydarzenia</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      autoComplete="off"
+                      margin="dense"
+                      id="typeName"
+                      label="Nazwa typu"
+                      type="text"
+                      fullWidth
+                      variant="standard"
+                    />
+                    <TextField
+                      autoComplete="off"
+                      margin="dense"
+                      id="priority"
+                      label="Prioritet"
+                      type="number"
+                      fullWidth
+                      variant="standard"
+                    />
+                    <TextField
+                      margin="dense"
+                      id="color"
+                      label="Kolor"
+                      type="color"
+                      fullWidth
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseUpdateType}>Powrót</Button>
+                    <Button onClick={handleCloseUpdateType} variant="contained">Zmień</Button>
+                  </DialogActions>
+                </Dialog>
             </Grid>
             <Grid item xs={3}>
               <Button 
-                autoFocus 
                 className="userdata-input-button"
                 variant="outlined" 
                 startIcon={<DeleteIcon />}
                 color="error"
-                onClick="">
+                onClick={handleShowDeleteType}>
                 Usuń
               </Button>
+              <Dialog
+                open={showDeleteType}
+                onClose={handleCloseDeleteType}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {"Czy napewno chcesz usunąć ten typ?"}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                  Usunięcie typu jest niemożliwe, jeśli przynajmniej jedno wydarzenie jest powiązane z tym typem. 
+                  Przejrzyj dobrze swoje wydarzenia i zmień na inny typ, jeśli chcesz ten typ usunąć.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleCloseDeleteType}>
+                    Powrót
+                  </Button>
+                  <Button onClick={handleCloseDeleteType} variant="contained">Usunąć</Button>
+                </DialogActions>
+              </Dialog>
             </Grid>
 
             <Grid item xs={12}>
@@ -185,10 +304,44 @@ export default function VerticalTabs() {
                 variant="outlined" 
                 size="large" 
                 startIcon={<ControlPointIcon />}
-                onClick=""
+                onClick={handleShowAddType}
               >
                 Nowy typ wydarzenia
               </Button>
+              <Dialog open={showAddType} onClose={handleCloseAddType}>
+                  <DialogTitle>Nowy typ wydarzenia</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      autoComplete="off"
+                      margin="dense"
+                      id="typeName"
+                      label="Nazwa typu"
+                      type="text"
+                      fullWidth
+                      variant="standard"
+                    />
+                    <TextField
+                      autoComplete="off"
+                      margin="dense"
+                      id="priority"
+                      label="Prioritet"
+                      type="number"
+                      fullWidth
+                      variant="standard"
+                    />
+                    <TextField
+                      margin="dense"
+                      id="color"
+                      label="Kolor"
+                      type="color"
+                      fullWidth
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseAddType}>Powrót</Button>
+                    <Button onClick={handleCloseAddType} variant="contained">Dodaj</Button>
+                  </DialogActions>
+                </Dialog>
             </Grid>
           </Grid>
         </div>
