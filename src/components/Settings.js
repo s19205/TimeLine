@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './Settings.css';
 import Divider from '@mui/material/Divider';
 import { Grid } from "@mui/material";
@@ -11,8 +11,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
+import { GetUser, UpdateUserMail } from "../api/User";
 
-export default function VerticalTabs() {
+export default function Settings() {
   const [currentEventId, setCurrentEventId] = useState(0)
   const [showUpdateMail, setShowUpdateMail] = useState(false)
   const [showUpdatePassword, setShowUpdatePassword] = useState(false)
@@ -20,7 +21,18 @@ export default function VerticalTabs() {
   const [showUpdateType, setShowUpdateType] = useState(false)
   const [showDeleteType, setShowDeleteType] = useState(false)
   const [showAddType, setShowAddType] = useState(false)
-  
+  const [userData, setUserData] = useState({
+    email: ''
+  });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const response = await GetUser()
+      setUserData(response.data)
+    }
+    fetchUserData()
+  }, [])
+
   const handleShowUpdateMail = () => {
     setShowUpdateMail(true);
   }
@@ -75,10 +87,11 @@ export default function VerticalTabs() {
             <Grid item container xs={12} alignItems="center" justifyContent="center">
               <Grid item xs={8}>
                 <TextField 
+                  autoFocus
                   className="userdata-input" 
                   name="title"
-                  defaultValue="mail@com"
-                  label="Mail" 
+                  value={userData.email}
+                  label="Email" 
                   variant="outlined" 
                   InputProps={{
                     readOnly: true,
