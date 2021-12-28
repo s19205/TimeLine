@@ -2,14 +2,14 @@ import React, { useState } from "react";
 // import TextField from '@mui/material/TextField';
 import { Grid } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import Logo from "../logo.svg";
+import Logo from "../../logo.svg";
 import Button from '@mui/material/Button';
 import './Login.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { login, logout, setUsername } from '../redux/userSlice';
+import { login, logout, setUsername } from '../../redux/userSlice';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
-import { AutorizeUser } from '../api/User'
+import { AutorizeUser } from '../../api/User'
 import jwt_decode from "jwt-decode";
 
 function Login(props) {

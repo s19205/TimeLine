@@ -1,0 +1,61 @@
+.signup-input {
+  width: 400px;
+}
+
+.signup-input-button {
+  width: 193px;
+}
+
+.logo {
+  width: 500px;
+}
+
+.signup-dialog-window {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 130px;
+}
+
+.signup-dialog-window > p {
+  font-size: 25px !important;
+  font-weight: 600 !important;
+}
+
+.signup-dialog-actions {
+  justify-content: center !important;
+}
+.signup-dialog-actions > button {
+  font-size: 18px;
+  width: 100px;
+}.signup-input {
+  width: 400px;
+}
+
+.signup-input-button {
+  width: 193px;
+}
+
+.logo {
+  width: 500px;
+}
+
+.signup-dialog-window {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 130px;
+}
+
+.signup-dialog-window > p {
+  font-size: 25px !important;
+  font-weight: 600 !important;
+}
+
+.signup-dialog-actions {
+  justify-content: center !important;
+}
+.signup-dialog-actions > button {
+  font-size: 18px;
+  width: 100px;
+}

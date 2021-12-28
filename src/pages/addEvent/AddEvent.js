@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from "react";
+// import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import { Grid } from "@mui/material";
-import FormControl from '@mui/material/FormControl';
-import Radio from '@mui/material/Radio';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import { Grid, IconButton } from "@mui/material";
+import { useSelector, useDispatch } from 'react-redux';
+import { login, logout } from '../../redux/userSlice';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import './Signup.css';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { Formik, Form, Field } from 'formik';
-import { TextField, RadioGroup } from 'formik-mui';
+import { TextField } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
-import ValidateAutocomplete from './validation/ValidateAutocomplete';
-import { GetUser, UpdateUser } from '../api/User';
-import { GetAllCountries } from '../api/Country';
+import ValidateAutocomplete from '../../validation/ValidateAutocomplete';
+import { AddEvent } from '../../api/Event';
+import { GetEventTypes } from '../../api/TypeOfEvent';
 import CircularProgress from '@mui/material/CircularProgress';
+import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import PropTypes from 'prop-types';
-import moment from 'moment';
+import CloseIcon from '@mui/icons-material/Close';
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -50,38 +49,32 @@ const BootstrapDialogTitle = (props) => {
   );
 };
 
-function UserInfoEdit(props) {
-  const [countries, setCountries] = useState([])
-  const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
-    dateOfBirth: null
-  });
-  const [isLoading, setIsLoading] = useState(false)
+function AddEventFunction(props) {
+  const [types, setTypes] = useState([]);
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const [file, setFile] = React.useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      setIsLoading(true)
-      const response = await GetUser()
-      setUserData(response.data)
-      setIsLoading(false)
+    const fetchTypes = async () => {
+      const response = await GetEventTypes()
+      setTypes(response.data)
     }
-    fetchUserData()
+    fetchTypes()
   }, [])
 
-  useEffect(() => {
-    const fetchCountries = async () => {
-      const response = await GetAllCountries()
-      setCountries(response.data)
-    }
-    fetchCountries()
-  }, [])
-
-  const handleBack = () => {
-    props.history.push('/user-info');
+  const handleAdd = () => {
+    dispatch(login());
+    props.history.push('/dashboard');
   }
-  const handleSave = () => {
-    props.history.push('/user-info');
+  const handleBack = () => {
+    dispatch(login());
+    props.history.push('/dashboard');
+  }
+
+  const handleFile = (event) => {
+    const file = event.target.files[0];
+    setFile(file);
   }
 
   const Div = styled('div')(({ theme }) => ({
@@ -111,40 +104,39 @@ function UserInfoEdit(props) {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
 
       <Formik
-        enableReinitialize={true}
         initialValues={{
-          firstName: userData.firstName ? userData.firstName : '',
-          lastName: userData.lastName ? userData.lastName : '',
-          dateOfBirth: new Date(userData.dateOfBirth),
-          sex: userData.sex ? userData.sex: 'M',
-          country: userData.country,
+          title: '',
+          description: '',
+          eventDate: '',
+          type: '',
+          file:'',
         }}
         validate={(values) => {
           const errors = {};
-          if (!values.firstName) {
-            errors.firstName = 'Imie wymagane';
+          if (!values.title) {
+            errors.title = 'Nazwa wymagana';
+          } else if (values.title.length < 5) {
+            errors.title = 'Nazwa jest za krótka';
           }
-          if (!values.lastName) {
-            errors.lastName = 'Nazwisko wymagane';
+          if (!values.eventDate) {
+            errors.eventDate = 'Data wymagana';
           }
-          if (!values.dateOfBirth) {
-            errors.dateOfBirth = 'Data urodzenia wymagana';
-          }
-          if (!values.country) {
-            errors.country = 'Miejscowość wymagana';
+          if (!values.type) {
+            errors.type = 'Typ wydarzenia jest wymagany';
           }
           return errors; 
         }}
         onSubmit={async (values, { setSubmitting, setFieldError }) => {
-          
           try {
-            setSubmitting(true)
+            setSubmitting(true);
+            console.log(file);
             const data = {
               ...values,
-              idCountry: values.country.idCountry,
-              dateOfBirth: values.dateOfBirth.toISOString()
+              type: values.type.idTypeOfEvent,
+              eventDate: values.eventDate.toISOString(),
+              file: file
             }
-            const response = await UpdateUser(data)
+            const response = await AddEvent(data)
             setSubmitting(false)
             handleClickOpen()
           } catch (err) {
@@ -156,65 +148,71 @@ function UserInfoEdit(props) {
       >
         {({ submitForm, isSubmitting, setFieldTouched, setFieldValue, errors, values, touched }) => (
           <Form>
-            <Div>{"Edycja danych osobistych"}</Div>
+            <Div>{"Nowe wydarzenie"}</Div>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Field 
                   component={TextField}
                   className="signup-input" 
-                  name="firstName"
-                  label="Imię" 
+                  label="Nazwa"
+                  name="title"
                   variant="outlined" 
+                />
+              </Grid>
+              
+              <Grid item xs={12}>
+                <Field 
+                  component={TextField}
+                  className="signup-input" 
+                  name="description"
+                  label="Opis" 
+                  variant="outlined"
+                  multiline
+                  maxRows={4}
                 />
               </Grid>
 
               <Grid item xs={12}>
-                <Field 
-                  component={TextField}
-                  className="signup-input"
-                  name="lastName"
-                  label="Nazwisko"
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12}>
                 <Field
                   component={DatePicker}
-                  name="dateOfBirth"
+                  name="eventDate"
                   inputFormat="dd/MM/yyyy"
-                  label="Data urodzenia"
+                  label="Data"
                   maxDate={Date.now()}
                   textField={{ variant: 'outlined', className: "signup-input" }}
                 />
               </Grid>
 
-              
-              <Grid item container xs={12} justifyContent="center">
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">Płeć</FormLabel>
-                  <Field row component={RadioGroup} name="sex" defaultValue={values.sex}>
-                    <FormControlLabel value="F" control={<Radio />} label="Kobieta" />
-                    <FormControlLabel value="M" control={<Radio />} label="Mężczyzna" />
-                    <FormControlLabel value="N" control={<Radio />} label="Inny" />
-                  </Field>
-                </FormControl>
-              </Grid>
-
               <Grid item container xs={12} justifyContent="center">
                 <ValidateAutocomplete
-                  id="country"
+                  id="type"
                   className="signup-input"
-                  name="country"
+                  name="type"
                   variant="outlined"
-                  label="Miejscowość"
-                  options={countries}
-                  getOptionLabel={(option) => option.countryName || ''}
-                  onBlur={() => setFieldTouched('country', true)}
-                  error={errors.country}
-                  touched={touched.country}
-                  onChange={(event, values) => setFieldValue('country', values)}
-                  value={values.country}
+                  label="Rodzaj"
+                  options={types}
+                  getOptionLabel={(option) => option.nameOfEvent || ''}
+                  onBlur={() => setFieldTouched('type', true)}
+                  error={errors.type}
+                  touched={touched.type}
+                  onChange={(event, values) => setFieldValue('type', values)}
+                  value={values.type}
                 />
+              </Grid>
+
+              <Grid item xs={12}>
+              <Div sx={{ fontSize: 20 }}>{"Dodaj media"}</Div>
+                <Grid item container xs={12} justifyContent="center" style={{ gap: '30px' }}>
+                  <Button component="label"> 
+                    <AddAPhotoIcon color="action" sx={{ fontSize: 70 }} />
+                    <input type="file" hidden onChange={handleFile}></input>
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                {file && (
+                  <p>{file.name}</p>
+                )}
               </Grid>
               <Grid item container xs={12} justifyContent="center" style={{ gap: '15px' }}>
                 <Button 
@@ -231,20 +229,20 @@ function UserInfoEdit(props) {
                   disabled={isSubmitting}
                   onClick={submitForm}
                 >
-                  Zachowaj
+                  Dodaj
                 </Button>  
 
                 <Dialog maxWidth="sm" fullWidth open={open}>
                 <DialogContent dividers className="signup-dialog-window">
                   <Typography gutterBottom >
-                    Dane konta zostały zmienione!
+                    Wydarzenie zostało dodane!
                   </Typography>
                 </DialogContent>
                 <DialogActions className="signup-dialog-actions">
                   <Button 
                     autoFocus 
                     variant="contained" 
-                    onClick={handleSave}>
+                    onClick={handleAdd}>
                     ok
                   </Button>
                 </DialogActions>
@@ -256,8 +254,7 @@ function UserInfoEdit(props) {
         )}
       </Formik>
     </LocalizationProvider>
-
   );
 }
 
-export default UserInfoEdit;
+export default AddEventFunction;

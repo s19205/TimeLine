@@ -1,25 +1,21 @@
-import React, { useEffect, useState } from "react";
-import Box from '@mui/material/Box';
+import React, { useState, useEffect } from "react";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { Grid } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
-import Autocomplete from '@mui/material/Autocomplete';
 import { styled } from '@mui/material/styles';
-import './Signup.css'
-import Logo from "../logo.svg";
-import { useSelector, useDispatch } from 'react-redux';
-import { login, logout } from '../redux/userSlice';
+import './UserInfoEdit.css';
 import { Formik, Form, Field } from 'formik';
 import { TextField, RadioGroup } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
-import ValidateAutocomplete from './validation/ValidateAutocomplete';
-import PropTypes from 'prop-types';
+import ValidateAutocomplete from '../../validation/ValidateAutocomplete';
+import { GetUser, UpdateUser } from '../../api/User';
+import { GetAllCountries } from '../../api/Country';
+import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -27,8 +23,8 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { RegisterUser } from '../api/User';
-import { GetAllCountries } from '../api/Country';
+import PropTypes from 'prop-types';
+import moment from 'moment';
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -54,10 +50,25 @@ const BootstrapDialogTitle = (props) => {
   );
 };
 
-function Signup(props) {
+function UserInfoEdit(props) {
   const [countries, setCountries] = useState([])
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const dispatch = useDispatch();
+  const [userData, setUserData] = useState({
+    firstName: '',
+    lastName: '',
+    dateOfBirth: null
+  });
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setIsLoading(true)
+      const response = await GetUser()
+      setUserData(response.data)
+      setIsLoading(false)
+    }
+    fetchUserData()
+  }, [])
+
   useEffect(() => {
     const fetchCountries = async () => {
       const response = await GetAllCountries()
@@ -65,26 +76,12 @@ function Signup(props) {
     }
     fetchCountries()
   }, [])
-  //password
-  const [password, setPassword] = useState({
-    password: '',
-    showPassword: false,
-  });
 
-  //date
-  const [date, setDate] = React.useState(new Date());
-  const handleChange = (newDate) => {
-    setDate(newDate);
-  };
-
-  //dashboard
-  const handleSignup = () => {
-    handleClose();
-    props.history.push('/login');
-  }
   const handleBack = () => {
-    dispatch(logout());
-    props.history.push('/');
+    props.history.push('/user-info');
+  }
+  const handleSave = () => {
+    props.history.push('/user-info');
   }
 
   const Div = styled('div')(({ theme }) => ({
@@ -93,22 +90,11 @@ function Signup(props) {
     fontSize: 26,
   }));
 
-  const CustomWidthTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-  ))({
-    [`& .${tooltipClasses.tooltip}`]: {
-      maxWidth: 500,
-    },
-  });
-
-  const loginText = `Wpisany login zostaje z tobą na zawsze także dobrze pomyślij nad nim`
-  const passwordText = `Hasło powinno zawierać co najmniej 1 małą literę, 1 wielką literę, 1 znak numeryczny i się składać z co najmniej 8 znaków`
-  
   BootstrapDialogTitle.propTypes = {
     children: PropTypes.node,
     onClose: PropTypes.func.isRequired,
   };
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -117,32 +103,24 @@ function Signup(props) {
     setOpen(false);
   };
 
+  if (isLoading) {
+    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
+  }
+
   return(
     <LocalizationProvider dateAdapter={AdapterDateFns}>
 
       <Formik
+        enableReinitialize={true}
         initialValues={{
-          login: '',
-          password: '',
-          firstName: '',
-          lastName: '',
-          dateOfBirth: '',
-          email: '',
-          sex: 'M',
-          country: '',
+          firstName: userData.firstName ? userData.firstName : '',
+          lastName: userData.lastName ? userData.lastName : '',
+          dateOfBirth: new Date(userData.dateOfBirth),
+          sex: userData.sex ? userData.sex: 'M',
+          country: userData.country,
         }}
         validate={(values) => {
           const errors = {};
-          if (!values.login) {
-            errors.login = 'Login wymagany';
-          }
-          if (!values.password) {
-            errors.password = 'Hasło wymagane';
-          } else if (
-            !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/i.test(values.password)
-          ) {
-            errors.password = "Hasło powinno zawierać co najmniej 1 małą literę, 1 wielką literę, 1 znak numeryczny i się składać z co najmniej 8 znaków"
-          }
           if (!values.firstName) {
             errors.firstName = 'Imie wymagane';
           }
@@ -152,26 +130,23 @@ function Signup(props) {
           if (!values.dateOfBirth) {
             errors.dateOfBirth = 'Data urodzenia wymagana';
           }
-          if (!values.email) {
-            errors.email = 'Email wymagany';
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-          ) {
-            errors.email = 'Niepoprawnie wpisany email';
-          }
           if (!values.country) {
             errors.country = 'Miejscowość wymagana';
           }
           return errors; 
         }}
         onSubmit={async (values, { setSubmitting, setFieldError }) => {
-          const data = { ...values, idCountry: values.country.idCountry }
+          
           try {
             setSubmitting(true)
-            const response = await RegisterUser(data)
+            const data = {
+              ...values,
+              idCountry: values.country.idCountry,
+              dateOfBirth: values.dateOfBirth.toISOString()
+            }
+            const response = await UpdateUser(data)
             setSubmitting(false)
             handleClickOpen()
-            // handleSignup()
           } catch (err) {
             console.log(err.response.data);
             const { field, errorMessage } = err.response.data;
@@ -181,31 +156,8 @@ function Signup(props) {
       >
         {({ submitForm, isSubmitting, setFieldTouched, setFieldValue, errors, values, touched }) => (
           <Form>
-            <img src={Logo} className="logo" onClick={handleBack}/>
-            <Div>{"Rejestracja"}</Div>
+            <Div>{"Edycja danych osobistych"}</Div>
             <Grid container spacing={2}>
-              <Tooltip title={loginText}>
-                <Grid item xs={12}>
-                  <Field 
-                    component={TextField}
-                    className="signup-input" 
-                    label="Login" 
-                    name="login"
-                    variant="outlined" 
-                  />
-                </Grid>
-              </Tooltip>
-              <Tooltip title={passwordText}>
-                <Grid item xs={12} >
-                  <Field
-                    component={TextField}
-                    className="signup-input"
-                    type={password.showPassword ? 'text' : 'password'}
-                    name="password"
-                    label="Hasło"
-                  />
-                </Grid>
-              </Tooltip>
               <Grid item xs={12}>
                 <Field 
                   component={TextField}
@@ -236,19 +188,11 @@ function Signup(props) {
                 />
               </Grid>
 
-              <Grid item xs={12}>
-                <Field
-                  component={TextField}
-                  className="signup-input"
-                  name="email"
-                  label="Email"
-                  variant="outlined"
-                />
-              </Grid>
+              
               <Grid item container xs={12} justifyContent="center">
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Płeć</FormLabel>
-                  <Field row component={RadioGroup} name="sex">
+                  <Field row component={RadioGroup} name="sex" defaultValue={values.sex}>
                     <FormControlLabel value="F" control={<Radio />} label="Kobieta" />
                     <FormControlLabel value="M" control={<Radio />} label="Mężczyzna" />
                     <FormControlLabel value="N" control={<Radio />} label="Inny" />
@@ -287,26 +231,26 @@ function Signup(props) {
                   disabled={isSubmitting}
                   onClick={submitForm}
                 >
-                  Załóż konto
+                  Zachowaj
                 </Button>  
 
                 <Dialog maxWidth="sm" fullWidth open={open}>
                 <DialogContent dividers className="signup-dialog-window">
                   <Typography gutterBottom >
-                    Konto zostalo stworzone!
+                    Dane konta zostały zmienione!
                   </Typography>
                 </DialogContent>
                 <DialogActions className="signup-dialog-actions">
                   <Button 
                     autoFocus 
                     variant="contained" 
-                    onClick={handleSignup}>
+                    onClick={handleSave}>
                     ok
                   </Button>
                 </DialogActions>
               </Dialog>
-
               </Grid>
+
             </Grid>
           </Form>
         )}
@@ -314,7 +258,6 @@ function Signup(props) {
     </LocalizationProvider>
 
   );
-
 }
 
-export default Signup;
+export default UserInfoEdit;

@@ -8,7 +8,7 @@ import FormLabel from '@mui/material/FormLabel';
 import './Dashboard.css';
 import Button from '@mui/material/Button';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import { login, logout } from '../redux/userSlice';
+import { login, logout } from '../../redux/userSlice';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -26,8 +26,8 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import YearComponent from './YearComponent';
-import MonthComponent from './MonthComponent';
+import YearComponent from './components/YearComponent';
+import MonthComponent from './components/MonthComponent';
 
 const StyledRadio = (props) => {
   return (

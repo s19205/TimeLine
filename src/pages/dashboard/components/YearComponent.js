@@ -4,7 +4,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import Stack from '@mui/material/Stack';
-import './Dashboard.css';
+import '../Dashboard.css';
 import {
   Timeline,
   Events,
@@ -20,10 +20,10 @@ import { useHistory } from "react-router";
 import { common, amber } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 import DehazeIcon from '@mui/icons-material/Dehaze';
-import { GetEvents } from "../api/Event";
+import { GetEvents } from "../../../api/Event";
 import { CircularProgress } from "@mui/material";
 import moment from "moment";
-import Image from "../photos/nothing_present.gif";
+import Image from "../../../photos/nothing_present.gif";
 
 const customTheme = createTheme(themes.default, {
   card: {

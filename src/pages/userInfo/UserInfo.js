@@ -13,12 +13,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import './Signup.css';
+import './UserInfo.css';
 import { Formik, Form, Field } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
-import { login, logout } from '../redux/userSlice';
+import { login, logout } from '../../redux/userSlice';
 import CircularProgress from '@mui/material/CircularProgress';
-import { GetUser } from '../api/User'
+import { GetUser } from '../../api/User'
 import moment from 'moment';
 
 function UserInfo(props) {
