@@ -28,8 +28,8 @@ export function UpdateUser(user) {
   return axios.post('/user/', user);
 };
 
-export function DeleteUser() {
-  return axios.delete('/user/');
+export function DeleteUser(user) {
+  return axios.delete('/user/', user);
 };
 
 export function refreshUser(data) {

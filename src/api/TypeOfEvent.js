@@ -8,11 +8,14 @@ export function GetEventType(id) {
   return axios.get(`/eventtype/${id}`);
 };
 
-export function AddEventType() {
-  return axios.post('/eventtype/add');
+export function AddEventType(data) {
+  return axios.post('/eventtype/add', data);
 };
 
-export function UpdateEventType() {
-  return axios.post('/eventtype/update');
+export function UpdateEventType(data) {
+  return axios.post('/eventtype/update', data);
 };
 
+export function DeleteEventType(id) {
+  return axios.delete(`/eventtype/${id}`);
+};

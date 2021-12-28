@@ -3,11 +3,9 @@ import { Grid, IconButton } from "@mui/material";
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { GetEvent, DeleteEvent } from '../../api/Event';
-import CircularProgress from '@mui/material/CircularProgress';
 import moment from 'moment';
 import TextField from '@mui/material/TextField';
 import { GetEventTypes } from '../../api/TypeOfEvent';
-import { Events } from "@merc/react-timeline";
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -16,6 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Processing from '../../photos/processing.gif';
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -102,7 +101,7 @@ function ShowEvent(props) {
   };
 
   if (isLoading) {
-    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
+    return <div sx={{ display: 'flex' }}><img src={Processing} width="200" /></div>
   }
 
   return(
@@ -151,7 +150,7 @@ function ShowEvent(props) {
             name="idTypeOfEvent"
             variant="outlined"
             label="Rodzaj"
-            defaultValue={eventData.idTypeOfEvent ? types.find(e => e.idTypeOfEvent === eventData.idTypeOfEvent)?.nameOfEvent : ''}
+            defaultValue={eventData.idTypeOfEvent ? types.find(e => e.idTypeOfEvent === eventData.idTypeOfEvent)?.typeName : ''}
             InputProps={{
               readOnly: true,
             }} 

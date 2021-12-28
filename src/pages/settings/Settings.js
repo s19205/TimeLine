@@ -3,20 +3,21 @@ import './Settings.css';
 import Divider from '@mui/material/Divider';
 import { Grid } from "@mui/material";
 import TextField from '@mui/material/TextField';
-import { TextField as FormikTextField } from 'formik-mui';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContentText from '@mui/material/DialogContentText';
-import { GetUser, UpdateUserMail } from "../../api/User";
-import { Formik, Form, Field } from 'formik';
+import { GetUser } from "../../api/User";
+import { GetEventTypes } from "../../api/TypeOfEvent";
+import EmailDialog from './components/EmailDialog';
+import PasswordDialog from "./components/PasswordDialog";
+import AccountDeleteDialog from "./components/AccountDeleteDialog";
+import TypeAddDialog from './components/TypeAddDialog';
+import TypeUpdateDialog from './components/TypeUpdateDialog';
+import TypeDeleteDialog from './components/TypeDeleteDialog';
+import Processing from '../../photos/processing.gif';
 
 export default function Settings() {
-  const [currentEventId, setCurrentEventId] = useState(0)
+  const [currentTypeId, setCurrentTypeId] = useState(0)
   const [showUpdateMail, setShowUpdateMail] = useState(false)
   const [showUpdatePassword, setShowUpdatePassword] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
@@ -26,13 +27,25 @@ export default function Settings() {
   const [userData, setUserData] = useState({
     email: ''
   });
+  const [types, setTypes] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const response = await GetUser()
-      setUserData(response.data)
-    }
+  const fetchUserData = async () => {
+    const response = await GetUser()
+    setUserData(response.data)
+  }
+  useEffect(() => { 
     fetchUserData()
+  }, [])
+
+  const fetchTypes = async () => {
+    setIsLoading(true)
+    const response = await GetEventTypes()
+    setTypes(response.data)
+    setIsLoading(false)
+  }
+  useEffect(() => {
+    fetchTypes()
   }, [])
 
   const handleShowUpdateMail = () => {
@@ -45,26 +58,28 @@ export default function Settings() {
   const handleShowUpdatePassword = () => {
     setShowUpdatePassword(true);
   }
+
   const handleCloseUpdatePassword = () => {
     setShowUpdatePassword(false);
   }
 
-  const handleShowDelete = (id) => {
-    setCurrentEventId(id);
+  const handleShowDelete = () => {
     setShowDelete(true);
   }
   const handleCloseDelete = () => {
     setShowDelete(false);
   }
 
-  const handleShowUpdateType = () => {
+  const handleShowUpdateType = (id) => {
+    setCurrentTypeId(id);
     setShowUpdateType(true);
   }
   const handleCloseUpdateType = () => {
     setShowUpdateType(false);
   }
 
-  const handleShowDeleteType = () => {
+  const handleShowDeleteType = (id) => {
+    setCurrentTypeId(id);
     setShowDeleteType(true);
   }
   const handleCloseDeleteType = () => {
@@ -77,7 +92,9 @@ export default function Settings() {
   const handleCloseAddType = () => {
     setShowAddType(false);
   }
-
+  if (isLoading) {
+    return <div sx={{ display: 'flex' }}><img src={Processing} width="300" /></div>
+  }
 
   return (      
     <div className="profile-page-container">
@@ -107,7 +124,6 @@ export default function Settings() {
                   onClick={handleShowUpdateMail}>
                   Zmień
                 </Button>
-                <EmailDialog handleClose={handleCloseUpdateMail} show={showUpdateMail} />
               </Grid>
             </Grid>
             <Grid item container xs={12} alignItems="center" justifyContent="center">
@@ -115,7 +131,7 @@ export default function Settings() {
                 <TextField 
                   className="userdata-input" 
                   name="title"
-                  defaultValue="password"
+                  defaultValue="passwordpassword"
                   label="Hasło" 
                   variant="outlined" 
                   type="password"
@@ -131,42 +147,6 @@ export default function Settings() {
                   onClick={handleShowUpdatePassword}>
                   Zmień
                 </Button>
-                <Dialog open={showUpdatePassword} onClose={handleCloseUpdatePassword}>
-                  <DialogTitle>Zmiana hasła</DialogTitle>
-                  <DialogContent>
-                    <TextField
-                      autoComplete="off"
-                      margin="dense"
-                      id="oldpass"
-                      label="Stare hasło"
-                      type="password"
-                      fullWidth
-                      variant="standard"
-                    />
-                    <TextField
-                      autoComplete="off"
-                      margin="dense"
-                      id="newPass"
-                      label="Nowe hasło"
-                      type="password"
-                      fullWidth
-                      variant="standard"
-                    />
-                    <TextField
-                      autoComplete="off"
-                      margin="dense"
-                      id="repeatNewPass"
-                      label="Powtórz nowe hasło"
-                      type="password"
-                      fullWidth
-                      variant="standard"
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseUpdatePassword}>Powrót</Button>
-                    <Button onClick={handleCloseUpdatePassword} variant="contained">Zmienić</Button>
-                  </DialogActions>
-                </Dialog>
               </Grid>
             </Grid>
             <Grid item xs={12} style={{ paddingTop: '30px' }}>
@@ -175,30 +155,9 @@ export default function Settings() {
                 variant="outlined" 
                 startIcon={<DeleteIcon />}
                 color="error"
-                onClick={() => handleShowDelete(1)}>
+                onClick={() => handleShowDelete()}>
                 Usuń konto
               </Button>
-              <Dialog
-                open={showDelete}
-                onClose={handleCloseDelete}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  {"Czy napewno chcesz usunąć konto?"}
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    Usunięcie konta oznacza nieodwołalne usunięcie wszystkich możliwych danych z nim związanych.
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseDelete}>Usunąć</Button>
-                  <Button onClick={handleCloseDelete} variant="contained">
-                    Powrót
-                  </Button>
-                </DialogActions>
-              </Dialog>
             </Grid>
           </Grid>
         </div>
@@ -209,92 +168,42 @@ export default function Settings() {
         <Divider className="divider" textAlign="left" variant="middle"></Divider>
         <div className="grid-type-container">
           <Grid container spacing={2} style={{ paddingBottom: '20px' }} justifyContent="center" alignItems="center">
-            <Grid item xs={6}>
-              <TextField 
-                className="name-type-input" 
-                name="title"
-                defaultValue="Wigilia"
-                variant="standard" 
-                InputProps={{
-                  readOnly: true,
-                }} 
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <Button 
-                className="userdata-input-button"
-                variant="contained" 
-                onClick={handleShowUpdateType}>
-                Zmień
-              </Button>
-              <Dialog open={showUpdateType} onClose={handleCloseUpdateType}>
-                  <DialogTitle>Edycja typ wydarzenia</DialogTitle>
-                  <DialogContent>
-                    <TextField
-                      autoComplete="off"
-                      margin="dense"
-                      id="typeName"
-                      label="Nazwa typu"
-                      type="text"
-                      fullWidth
-                      variant="standard"
+            {types.map((type, index) => (
+              type.idUser !== null && (
+                <>
+                  <Grid item xs={6} key={index}>
+                    <TextField 
+                      className="name-type-input" 
+                      name="title"
+                      defaultValue={type.typeName}
+                      variant="standard" 
+                      InputProps={{
+                        readOnly: true,
+                      }} 
                     />
-                    <TextField
-                      autoComplete="off"
-                      margin="dense"
-                      id="priority"
-                      label="Prioritet"
-                      type="number"
-                      fullWidth
-                      variant="standard"
-                    />
-                    <TextField
-                      margin="dense"
-                      id="color"
-                      label="Kolor"
-                      type="color"
-                      fullWidth
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseUpdateType}>Powrót</Button>
-                    <Button onClick={handleCloseUpdateType} variant="contained">Zmień</Button>
-                  </DialogActions>
-                </Dialog>
-            </Grid>
-            <Grid item xs={3}>
-              <Button 
-                className="userdata-input-button"
-                variant="outlined" 
-                startIcon={<DeleteIcon />}
-                color="error"
-                onClick={handleShowDeleteType}>
-                Usuń
-              </Button>
-              <Dialog
-                open={showDeleteType}
-                onClose={handleCloseDeleteType}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  {"Czy napewno chcesz usunąć ten typ?"}
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                  Usunięcie typu jest niemożliwe, jeśli przynajmniej jedno wydarzenie jest powiązane z tym typem. 
-                  Przejrzyj dobrze swoje wydarzenia i zmień na inny typ, jeśli chcesz ten typ usunąć.
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleCloseDeleteType}>
-                    Powrót
-                  </Button>
-                  <Button onClick={handleCloseDeleteType} variant="contained">Usunąć</Button>
-                </DialogActions>
-              </Dialog>
-            </Grid>
-
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Button 
+                      className="userdata-input-button"
+                      variant="contained" 
+                      onClick={() => handleShowUpdateType(type.idTypeOfEvent)}
+                    >
+                      Zmień
+                    </Button>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Button 
+                      className="userdata-input-button"
+                      variant="outlined" 
+                      startIcon={<DeleteIcon />}
+                      color="error"
+                      onClick={() => handleShowDeleteType(type.idTypeOfEvent)}>
+                      Usuń
+                    </Button>
+                  </Grid>
+                </>
+              )
+            ))}
             <Grid item xs={12}>
               <Button 
                 variant="outlined" 
@@ -304,117 +213,30 @@ export default function Settings() {
               >
                 Nowy typ wydarzenia
               </Button>
-              <Dialog open={showAddType} onClose={handleCloseAddType}>
-                  <DialogTitle>Nowy typ wydarzenia</DialogTitle>
-                  <DialogContent>
-                    <TextField
-                      autoComplete="off"
-                      margin="dense"
-                      id="typeName"
-                      label="Nazwa typu"
-                      type="text"
-                      fullWidth
-                      variant="standard"
-                    />
-                    <TextField
-                      autoComplete="off"
-                      margin="dense"
-                      id="priority"
-                      label="Prioritet"
-                      type="number"
-                      fullWidth
-                      variant="standard"
-                    />
-                    <TextField
-                      margin="dense"
-                      id="color"
-                      label="Kolor"
-                      type="color"
-                      fullWidth
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseAddType}>Powrót</Button>
-                    <Button onClick={handleCloseAddType} variant="contained">Dodaj</Button>
-                  </DialogActions>
-                </Dialog>
             </Grid>
+            
           </Grid>
         </div>
       </div>
+      {showUpdateMail && (
+        <EmailDialog fetchUserData={fetchUserData} handleClose={handleCloseUpdateMail} show={showUpdateMail} />
+      )}
+      {showUpdatePassword && (
+        <PasswordDialog handleClose={handleCloseUpdatePassword} show={showUpdatePassword}/>
+      )}
+      {showDeleteType && (
+        <TypeDeleteDialog fetchTypes={fetchTypes} id={currentTypeId} show={showDeleteType} handleClose={handleCloseDeleteType}/>
+      )}
+      {showUpdateType && (
+        <TypeUpdateDialog fetchTypes={fetchTypes} id={currentTypeId} show={showUpdateType} handleClose={handleCloseUpdateType}/>
+      )}
+      {showDelete && (
+        <AccountDeleteDialog handleClose={handleCloseDelete} show={showDelete}/>
+      )}
+      {showAddType && (
+        <TypeAddDialog fetchTypes={fetchTypes} show={showAddType} handleClose={handleCloseAddType} />
+      )}
     </div>
   );
 }
 
-const EmailDialog = (props) => {
-  return (
-    <Formik
-      initialValues={{
-        email: '',
-      }}
-      validate={(values) => {
-        const errors = {};
-        if (!values.email) {
-          errors.email = 'Dla zmiany starego emailu nowy email jest wymagany';
-        } else if (
-          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-        ) {
-          errors.email = 'Niepoprawnie wpisany email';
-        }
-        return errors; 
-      }}
-      onSubmit={async (values, { setSubmitting, setFieldError }) => {
-        
-        try {
-          setSubmitting(true)
-          const data = {
-            newEmail: values.email
-          }
-          const response = await UpdateUserMail(data)
-          props.handleClose()
-          setSubmitting(false)
-        } catch (err) {
-          console.log(err.response.data);
-          const { field, errorMessage } = err.response.data;
-          (field && errorMessage) && setFieldError(field, errorMessage);
-        }
-      }}
-    >
-      {({ submitForm, isSubmitting, setFieldTouched, setFieldValue, errors, values, touched }) => (
-        <Form>
-          <Dialog open={props.show} onClose={props.handleClose}>
-            <DialogTitle>Zmiana maila</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Uprzejmie prosimy o podanie prawdziwego adresu e-mail, ponieważ w przyszłości będziesz mógł potwierdzić swoje konto tym e-mailem
-              </DialogContentText>
-              <Field
-                component={FormikTextField}
-                className="signup-input"
-                name="email"
-                label="Email"
-                variant="standard"
-                fullWidth
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button 
-                onClick={props.handleClose}
-                disabled={isSubmitting}
-              >
-                Powrót
-              </Button>
-              <Button 
-                onClick={submitForm} 
-                disabled={isSubmitting}
-                variant="contained"
-              >
-                Zmienić
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Form>
-      )}
-    </Formik>
-  )
-}

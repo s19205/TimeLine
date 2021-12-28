@@ -71,13 +71,6 @@ function Signup(props) {
     showPassword: false,
   });
 
-  //date
-  const [date, setDate] = React.useState(new Date());
-  const handleChange = (newDate) => {
-    setDate(newDate);
-  };
-
-  //dashboard
   const handleSignup = () => {
     handleClose();
     props.history.push('/login');
@@ -140,6 +133,7 @@ function Signup(props) {
             errors.password = 'Hasło wymagane';
           } else if (
             !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/i.test(values.password)
+            
           ) {
             errors.password = "Hasło powinno zawierać co najmniej 1 małą literę, 1 wielką literę, 1 znak numeryczny i się składać z co najmniej 8 znaków"
           }

@@ -8,22 +8,20 @@ import '../Dashboard.css';
 import {
   Timeline,
   Events,
-  UrlButton,
   ImageEvent,
   TextEvent,
-  YouTubeEvent,
   themes,
   createTheme
 } from '@merc/react-timeline';
 import { Button } from "@mui/material";
 import { useHistory } from "react-router";
-import { common, amber } from '@mui/material/colors';
+import { common } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import { GetEvents } from "../../../api/Event";
-import { CircularProgress } from "@mui/material";
 import moment from "moment";
 import Image from "../../../photos/nothing_present.gif";
+import Processing from '../../../photos/processing.gif';
 
 const customTheme = createTheme(themes.default, {
   card: {
@@ -75,7 +73,7 @@ const MonthComponent = (props) => {
   }));
 
   if (isLoading) {
-    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
+    return <div sx={{ display: 'flex' }}><img src={Processing} width="300" /></div>
   }
 
   return (

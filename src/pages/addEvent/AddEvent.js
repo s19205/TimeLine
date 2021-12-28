@@ -9,14 +9,12 @@ import { login, logout } from '../../redux/userSlice';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from '../../validation/ValidateAutocomplete';
 import { AddEvent } from '../../api/Event';
 import { GetEventTypes } from '../../api/TypeOfEvent';
-import CircularProgress from '@mui/material/CircularProgress';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -24,6 +22,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
+import Processing from '../../photos/processing.gif';
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -97,7 +96,7 @@ function AddEventFunction(props) {
   };
 
   if (isLoading) {
-    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
+    return <div sx={{ display: 'flex' }}><img src={Processing} width="300" /></div>
   }
 
   return(
@@ -191,7 +190,7 @@ function AddEventFunction(props) {
                   variant="outlined"
                   label="Rodzaj"
                   options={types}
-                  getOptionLabel={(option) => option.nameOfEvent || ''}
+                  getOptionLabel={(option) => option.typeName || ''}
                   onBlur={() => setFieldTouched('type', true)}
                   error={errors.type}
                   touched={touched.type}

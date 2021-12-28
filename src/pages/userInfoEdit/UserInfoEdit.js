@@ -15,7 +15,7 @@ import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from '../../validation/ValidateAutocomplete';
 import { GetUser, UpdateUser } from '../../api/User';
 import { GetAllCountries } from '../../api/Country';
-import CircularProgress from '@mui/material/CircularProgress';
+import Processing from '../../photos/processing.gif';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -104,7 +104,7 @@ function UserInfoEdit(props) {
   };
 
   if (isLoading) {
-    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
+    return <div sx={{ display: 'flex' }}><img src={Processing} width="300" /></div>
   }
 
   return(

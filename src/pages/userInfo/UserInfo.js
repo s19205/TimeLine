@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TextField from '@mui/material/TextField';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { Grid } from "@mui/material";
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -15,9 +10,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import './UserInfo.css';
 import { Formik, Form, Field } from 'formik';
-import { useSelector, useDispatch } from 'react-redux';
-import { login, logout } from '../../redux/userSlice';
-import CircularProgress from '@mui/material/CircularProgress';
+import Processing from '../../photos/processing.gif';
 import { GetUser } from '../../api/User'
 import moment from 'moment';
 
@@ -53,7 +46,7 @@ function UserInfo(props) {
   }));
 
   if (isLoading) {
-    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
+    return <div sx={{ display: 'flex' }}><img src={Processing} width="300" /></div>
   }
 
   return(

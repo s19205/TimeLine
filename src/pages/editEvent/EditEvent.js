@@ -2,13 +2,9 @@ import React, { useState, useEffect } from "react";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { Grid, IconButton } from "@mui/material";
-import { useSelector, useDispatch } from 'react-redux';
-import { login, logout } from '../../redux/userSlice';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import typesOfEvent from "../../constants/typesOfEvent";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
@@ -21,8 +17,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
-import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
+import Processing from '../../photos/processing.gif';
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -109,7 +105,7 @@ function EditEvent(props) {
   };
 
   if (isLoading) {
-    return <div sx={{ display: 'flex' }}><CircularProgress /></div>
+    return <div sx={{ display: 'flex' }}><img src={Processing} width="300" /></div>
   }
 
   return(
@@ -203,7 +199,7 @@ function EditEvent(props) {
                   variant="outlined"
                   label="Rodzaj"
                   options={types}
-                  getOptionLabel={(option) => option.nameOfEvent || ''}
+                  getOptionLabel={(option) => option.typeName || ''}
                   onBlur={() => setFieldTouched('type', true)}
                   error={errors.type}
                   touched={touched.type}
