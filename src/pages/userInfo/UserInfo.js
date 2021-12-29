@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import './UserInfo.css';
 import { Formik, Form, Field } from 'formik';
-import Processing from '../../photos/processing.gif';
+import Processing from '../../images/processing.gif';
 import { GetUser } from '../../api/User'
 import moment from 'moment';
 
