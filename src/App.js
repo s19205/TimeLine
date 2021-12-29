@@ -12,7 +12,7 @@ import AddEvent from './pages/addEvent/AddEvent';
 import ShowEvent from './pages/showEvent/ShowEvent';
 import EditEvent from './pages/editEvent/EditEvent';
 import Settings from './pages/settings/Settings';
-import background from './background2.svg';
+import background from './images/background2.svg';
 import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
 import { useSelector, useDispatch } from 'react-redux';

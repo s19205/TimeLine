@@ -11,7 +11,7 @@ import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from '../../validation/ValidateAutocomplete';
 import { GetEventTypes } from '../../api/TypeOfEvent';
 import { GetEvent, UpdateEvent } from '../../api/Event';
-import Processing from '../../photos/processing.gif';
+import Processing from '../../images/processing.gif';
 import EditDoneDialog from "./components/EditDoneDialog";
 
 function EditEvent(props) {

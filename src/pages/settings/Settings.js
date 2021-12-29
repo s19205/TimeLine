@@ -14,7 +14,7 @@ import AccountDeleteDialog from "./components/AccountDeleteDialog";
 import TypeAddDialog from './components/TypeAddDialog';
 import TypeUpdateDialog from './components/TypeUpdateDialog';
 import TypeDeleteDialog from './components/TypeDeleteDialog';
-import Processing from '../../photos/processing.gif';
+import Processing from '../../images/processing.gif';
 
 export default function Settings(props) {
   const [currentTypeId, setCurrentTypeId] = useState(0)

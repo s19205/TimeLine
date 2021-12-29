@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import { GetEventType, UpdateEventType } from "../../../api/TypeOfEvent";
-import Processing from '../../../photos/processing.gif';
+import Processing from '../../../images/processing.gif';
 
 const TypeUpdateDialog = (props) => {
   const [typeData, setTypeData] = useState([])

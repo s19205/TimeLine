@@ -2,7 +2,7 @@ import React from "react";
 import Button from '@mui/material/Button';
 import { Grid } from "@mui/material";
 import './Home.css'
-import Logo from "../../logo.svg";
+import Logo from "../../images/logo.svg";
 
 function Home(props) {
 

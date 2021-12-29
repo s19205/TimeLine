@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import { styled } from '@mui/material/styles';
 import './Signup.css'
-import Logo from "../../logo.svg";
+import Logo from "../../images/logo.svg";
 import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../../redux/userSlice';
 import { Formik, Form, Field } from 'formik';

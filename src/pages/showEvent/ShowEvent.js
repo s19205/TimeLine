@@ -7,7 +7,7 @@ import moment from 'moment';
 import TextField from '@mui/material/TextField';
 import { GetEventTypes } from '../../api/TypeOfEvent';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Processing from '../../photos/processing.gif';
+import Processing from '../../images/processing.gif';
 import DeleteDialog from "./components/DeleteDialog";
 
 function ShowEvent(props) {

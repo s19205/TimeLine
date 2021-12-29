@@ -15,7 +15,7 @@ import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from '../../validation/ValidateAutocomplete';
 import { GetUser, UpdateUser } from '../../api/User';
 import { GetAllCountries } from '../../api/Country';
-import Processing from '../../photos/processing.gif';
+import Processing from '../../images/processing.gif';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';

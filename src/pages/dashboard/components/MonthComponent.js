@@ -20,8 +20,8 @@ import { styled } from '@mui/material/styles';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import { GetEvents } from "../../../api/Event";
 import moment from "moment";
-import Image from "../../../photos/nothing_present.gif";
-import Processing from '../../../photos/processing.gif';
+import Image from "../../../images/nothing_present.gif";
+import Processing from '../../../images/processing.gif';
 
 const customTheme = createTheme(themes.default, {
   card: {

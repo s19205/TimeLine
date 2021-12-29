@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import Logo from "../../logo.svg";
+import Logo from "../../images/logo.svg";
 import Button from '@mui/material/Button';
 import './Login.css';
 import { useSelector, useDispatch } from 'react-redux';

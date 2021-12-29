@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Header.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { login, logout } from '../../redux/userSlice';
-import Logo from "../../logo.svg";
+import Logo from "../../images/logo.svg";
 import Avatar from '@mui/material/Avatar';
 import LogoutIcon from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
