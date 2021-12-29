@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -65,6 +65,7 @@ const YearComponent = (props) => {
       setIsLoading(false)
     }
     fetchEvents()
+    
   }, [year])
 
   const Div = styled('div')(({ theme }) => ({
@@ -100,13 +101,14 @@ const YearComponent = (props) => {
 
         <Timeline theme={customTheme} opts={{ layout: 'alt-evts-inline-date' }}>
             <Events>
-              {events.map((event) => (
+              {events.map((event, index) => (
                 event.format === 'text'
                 ? (
                   <TextEvent 
-                    className="text-event"
+                    className="event text-event priority-1 brown"
                     date={moment(event.eventDate).format('DD/MM/YYYY')} 
                     text={event.title} 
+                    key={index}
                   >
                     <div className="button-text-event-container">
                       <ColorButton className="button-text-event" onClick={() => handleShowEvent(event.idEvent)}>
@@ -117,6 +119,7 @@ const YearComponent = (props) => {
                 )
                 : (
                   <ImageEvent
+                    className="event priority-3 image-event slateblue"
                     date={moment(event.eventDate).format('DD/MM/YYYY')}
                     text={event.title}
                     src={event.fileUrl}

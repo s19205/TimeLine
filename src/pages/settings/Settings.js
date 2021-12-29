@@ -16,7 +16,7 @@ import TypeUpdateDialog from './components/TypeUpdateDialog';
 import TypeDeleteDialog from './components/TypeDeleteDialog';
 import Processing from '../../photos/processing.gif';
 
-export default function Settings() {
+export default function Settings(props) {
   const [currentTypeId, setCurrentTypeId] = useState(0)
   const [showUpdateMail, setShowUpdateMail] = useState(false)
   const [showUpdatePassword, setShowUpdatePassword] = useState(false)
@@ -231,7 +231,7 @@ export default function Settings() {
         <TypeUpdateDialog fetchTypes={fetchTypes} id={currentTypeId} show={showUpdateType} handleClose={handleCloseUpdateType}/>
       )}
       {showDelete && (
-        <AccountDeleteDialog handleClose={handleCloseDelete} show={showDelete}/>
+        <AccountDeleteDialog handleClose={handleCloseDelete} show={showDelete} />
       )}
       {showAddType && (
         <TypeAddDialog fetchTypes={fetchTypes} show={showAddType} handleClose={handleCloseAddType} />

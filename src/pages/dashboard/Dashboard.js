@@ -1,25 +1,10 @@
 import React from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 import './Dashboard.css';
 import Button from '@mui/material/Button';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import { login, logout } from '../../redux/userSlice';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
-import MobileDateRangePicker from '@mui/lab/MobileDateRangePicker';
-import DesktopDateRangePicker from '@mui/lab/DesktopDateRangePicker';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -28,6 +13,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import YearComponent from './components/YearComponent';
 import MonthComponent from './components/MonthComponent';
+import {VerticleButton  as ScrollUpButton} from "react-scroll-up-button";
 
 const StyledRadio = (props) => {
   return (
@@ -87,6 +73,7 @@ function Dashboard(props) {
         >
           Nowe wydarzenie
         </Button>
+        <div><ScrollUpButton style={{ width: '100px', backgroundColor: 'coral' }}/></div>
       </div>
     </div>
   );

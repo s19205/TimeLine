@@ -1,44 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Grid, IconButton } from "@mui/material";
+import { Grid } from "@mui/material";
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { GetEvent, DeleteEvent } from '../../api/Event';
 import moment from 'moment';
 import TextField from '@mui/material/TextField';
 import { GetEventTypes } from '../../api/TypeOfEvent';
-import PropTypes from 'prop-types';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Processing from '../../photos/processing.gif';
-
-const BootstrapDialogTitle = (props) => {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-};
+import DeleteDialog from "./components/DeleteDialog";
 
 function ShowEvent(props) {
   const [types, setTypes] = useState([]);
@@ -76,6 +46,7 @@ function ShowEvent(props) {
   const handleBack = () => {
     props.history.push('/dashboard');
   }
+
   const handleDelete = async () => {
     await DeleteEvent(id);
     props.history.push('/dashboard');
@@ -87,10 +58,6 @@ function ShowEvent(props) {
     fontSize: 26,
   }));
 
-  BootstrapDialogTitle.propTypes = {
-    children: PropTypes.node,
-    onClose: PropTypes.func.isRequired,
-  };
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -200,28 +167,7 @@ function ShowEvent(props) {
           >
             Usuń
           </Button>
-        
-          <Dialog maxWidth="sm" fullWidth open={open}>
-            <DialogContent dividers className="signup-dialog-window">
-              <Typography gutterBottom >
-                Czy na pewno chcesz usunąć wydarzenie?
-              </Typography>
-            </DialogContent>
-            <DialogActions className="signup-dialog-actions">
-              <Button 
-                autoFocus 
-                variant="contained" 
-                onClick={handleDelete}>
-                tak
-              </Button>
-              <Button 
-                autoFocus 
-                variant="contained" 
-                onClick={handleClose}>
-                nie
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <DeleteDialog open={open} handleDelete={handleDelete} handleClose={handleClose} />
         </Grid>
       </Grid>
     </>

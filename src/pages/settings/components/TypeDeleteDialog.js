@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { Formik, Form, Field } from 'formik';
-import { TextField as FormikTextField } from 'formik-mui';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -15,16 +13,14 @@ const TypeDeleteDialog = (props) => {
 
   const handleDelete = async () => {
     try {
-      const response = await DeleteEventType(id)
-      console.log(response)
+      const response = await DeleteEventType()
       props.fetchTypes()
       props.handleClose()
     } catch (err) {
       setError(err.response.data)
     }
   }
-
-
+  
   return (
     <Dialog
       open={props.show}

@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-// import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import { Grid, IconButton } from "@mui/material";
-import { useSelector, useDispatch } from 'react-redux';
-import { login, logout } from '../../redux/userSlice';
+import { Grid } from "@mui/material";
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
@@ -15,44 +11,12 @@ import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from '../../validation/ValidateAutocomplete';
 import { AddEvent } from '../../api/Event';
 import { GetEventTypes } from '../../api/TypeOfEvent';
-import PropTypes from 'prop-types';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import Processing from '../../photos/processing.gif';
-
-const BootstrapDialogTitle = (props) => {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-};
+import AddDoneDialog from "./components/AddDoneDialog";
 
 function AddEventFunction(props) {
   const [types, setTypes] = useState([]);
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = React.useState(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchTypes = async () => {
@@ -62,15 +26,12 @@ function AddEventFunction(props) {
     fetchTypes()
   }, [])
 
-  const handleAdd = () => {
-    dispatch(login());
+  const handleShowAddDoneDialog = () => {
+    setOpen(true);
+  };
+  const handleDashboard = () => {
     props.history.push('/dashboard');
   }
-  const handleBack = () => {
-    dispatch(login());
-    props.history.push('/dashboard');
-  }
-
   const handleFile = (event) => {
     const file = event.target.files[0];
     setFile(file);
@@ -81,23 +42,6 @@ function AddEventFunction(props) {
     padding: theme.spacing(2),
     fontSize: 26,
   }));
-
-  BootstrapDialogTitle.propTypes = {
-    children: PropTypes.node,
-    onClose: PropTypes.func.isRequired,
-  };
-  const [open, setOpen] = useState(false);
-  
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  if (isLoading) {
-    return <div sx={{ display: 'flex' }}><img src={Processing} width="300" /></div>
-  }
 
   return(
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -137,7 +81,7 @@ function AddEventFunction(props) {
             }
             const response = await AddEvent(data)
             setSubmitting(false)
-            handleClickOpen()
+            handleShowAddDoneDialog()
           } catch (err) {
             console.log(err.response.data);
             const { field, errorMessage } = err.response.data;
@@ -218,7 +162,7 @@ function AddEventFunction(props) {
                   variant="outlined" 
                   className="signup-input-button" 
                   disabled={isSubmitting}
-                  onClick={handleBack}
+                  onClick={handleDashboard}
                 >
                   Powrót
                 </Button>
@@ -230,24 +174,8 @@ function AddEventFunction(props) {
                 >
                   Dodaj
                 </Button>  
-
-                <Dialog maxWidth="sm" fullWidth open={open}>
-                <DialogContent dividers className="signup-dialog-window">
-                  <Typography gutterBottom >
-                    Wydarzenie zostało dodane!
-                  </Typography>
-                </DialogContent>
-                <DialogActions className="signup-dialog-actions">
-                  <Button 
-                    autoFocus 
-                    variant="contained" 
-                    onClick={handleAdd}>
-                    ok
-                  </Button>
-                </DialogActions>
-              </Dialog>
+                <AddDoneDialog  handleDashboard={handleDashboard} open={open} />
               </Grid>
-
             </Grid>
           </Form>
         )}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import { Grid, IconButton } from "@mui/material";
+import { Grid } from "@mui/material";
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
@@ -11,38 +11,8 @@ import { DatePicker } from 'formik-mui-lab';
 import ValidateAutocomplete from '../../validation/ValidateAutocomplete';
 import { GetEventTypes } from '../../api/TypeOfEvent';
 import { GetEvent, UpdateEvent } from '../../api/Event';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import CloseIcon from '@mui/icons-material/Close';
-import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
 import Processing from '../../photos/processing.gif';
-
-const BootstrapDialogTitle = (props) => {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-};
+import EditDoneDialog from "./components/EditDoneDialog";
 
 function EditEvent(props) {
   const [types, setTypes] = useState([]);
@@ -75,7 +45,7 @@ function EditEvent(props) {
   }, [])
 
   const handleBack = () => {
-    props.history.push('/show-event');
+    props.history.push(`/show-event/${id}`);
   }
 
 //
@@ -91,17 +61,10 @@ function EditEvent(props) {
     fontSize: 26,
   }));
 
-  BootstrapDialogTitle.propTypes = {
-    children: PropTypes.node,
-    onClose: PropTypes.func.isRequired,
-  };
   const [open, setOpen] = useState(false);
   
   const handleClickOpen = () => {
     setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
   };
 
   if (isLoading) {
@@ -110,7 +73,6 @@ function EditEvent(props) {
 
   return(
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-
       <Formik
         initialValues={{
           title: eventData.title ? eventData.title : '',
@@ -135,7 +97,6 @@ function EditEvent(props) {
           return errors; 
         }}
         onSubmit={async (values, { setSubmitting, setFieldError }) => {
-          
           try {
             setSubmitting(true)
             const data = {
@@ -257,22 +218,7 @@ function EditEvent(props) {
                 >
                   Zachowaj
                 </Button>  
-
-                <Dialog maxWidth="sm" fullWidth open={open}>
-                  <DialogContent dividers className="signup-dialog-window">
-                    <Typography gutterBottom >
-                      Dane wydarzenia zostały zmienione!
-                    </Typography>
-                  </DialogContent>
-                  <DialogActions className="signup-dialog-actions">
-                    <Button 
-                      autoFocus 
-                      variant="contained" 
-                      onClick={handleBack}>
-                      ok
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                <EditDoneDialog open={open} handleBack={handleBack} />
               </Grid>
             </Grid>
           </Form>

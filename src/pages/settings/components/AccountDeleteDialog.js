@@ -6,8 +6,20 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
 import { DeleteUser } from "../../../api/User";
+import { logout } from '../../../redux/userSlice';
 
 const AccountDeleteDialog = (props) => {
+  const handleDelete = async () => {
+    try {
+      const response = await DeleteUser()
+      window.localStorage.removeItem('access_token')
+      window.localStorage.removeItem('refresh_token')
+      logout()
+    } catch (err) {
+      console.log(err.response.data)
+    }
+  }
+
   return (
     <Dialog
       open={props.show}
@@ -24,7 +36,7 @@ const AccountDeleteDialog = (props) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => DeleteUser()}>Usunąć</Button>
+        <Button onClick={() => handleDelete()}>Usunąć</Button>
         <Button onClick={props.handleClose} variant="contained">
           Powrót
         </Button>
