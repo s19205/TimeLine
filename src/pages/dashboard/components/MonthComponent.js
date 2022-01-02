@@ -102,7 +102,7 @@ const MonthComponent = (props) => {
               event.format === 'text'
               ? (
                 <TextEvent 
-                  className="text-event"
+                  className={`event text-event priority-${event.priority} ${event.colorCode}`}
                   date={moment(event.eventDate).format('DD/MM/YYYY')} 
                   text={event.title} 
                 >
@@ -115,6 +115,7 @@ const MonthComponent = (props) => {
               )
               : (
                 <ImageEvent
+                  className={`event priority-${event.priority} image-event ${event.colorCode}`}
                   date={moment(event.eventDate).format('DD/MM/YYYY')}
                   text={event.title}
                   src={event.fileUrl}

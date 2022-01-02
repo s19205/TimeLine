@@ -19,3 +19,11 @@ export function UpdateEventType(data) {
 export function DeleteEventType(id) {
   return axios.delete(`/eventtype/${id}`);
 };
+
+export function GetColors() {
+  return axios.get('eventtype/colors');
+}
+
+export function GetPriorities() {
+  return axios.get('eventtype/priorities');
+}

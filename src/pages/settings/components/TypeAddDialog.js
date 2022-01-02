@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field } from 'formik';
 import { TextField as FormikTextField } from 'formik-mui';
 import Dialog from '@mui/material/Dialog';
@@ -6,28 +6,48 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import { AddEventType } from "../../../api/TypeOfEvent";
+import { AddEventType, GetColors, GetPriorities } from "../../../api/TypeOfEvent";
+import ValidateAutocomplete from '../../../validation/ValidateAutocomplete';
 
 const TypeAddDialog = (props) => {
-  
+  const [colors, setColors] = useState([]);
+  const [priorities, setPriorities] = useState([]);
+
+  useEffect(() => {
+    const fetchColors = async () => {
+      const response = await GetColors()
+      setColors(response.data)
+    }
+    fetchColors()
+  }, [])
+
+  useEffect(() => {
+    const fetchPriorities = async () => {
+      const response = await GetPriorities()
+      setPriorities(response.data)
+    }
+    fetchPriorities()
+  }, [])
+
   return(
     <Formik
       initialValues={{
         typeName: '',
+        colorName: 'brown',
         priority: 1,
-        color: '#006b54',
       }}
       validate={(values) => {
         const errors = {};
         if (!values.typeName) {
           errors.typeName = 'Nazwa wymagana';
-        } else if (values.typeName.length < 5) {
+        } else if (values.typeName.length < 4) {
           errors.typeName = 'Nazwa jest za krótka';
         }
-        if (values.priority < 1) {
-          errors.priority = 'Prioritet nie może być mniejszy od 1'
-        } else if (values.priority > 10) {
-          errors.priority = 'Prioritet nie może być wiekszy od 10'
+        if (!values.colorName) {
+          errors.colorName = 'Kolor wymagany';
+        }
+        if (!values.priority) {
+          errors.priority = 'Prioritet wymagany';
         }
         return errors; 
       }}
@@ -37,8 +57,8 @@ const TypeAddDialog = (props) => {
           setSubmitting(true)
           const data = {
             typeName: values.typeName,
-            priority: values.priority,
-            color: values.color
+            idPriority: values.priority.idPriority,
+            idColor: values.color.idColor
           }
           const response = await AddEventType(data)
           props.fetchTypes()
@@ -65,22 +85,33 @@ const TypeAddDialog = (props) => {
                 fullWidth
                 variant="standard"
               />
-              <Field
-                component={FormikTextField}
-                margin="dense"
+              <ValidateAutocomplete
+                id="priority"
+                className="signup-input"
                 name="priority"
-                label="Prioritet"
-                type="number"
-                fullWidth
                 variant="standard"
+                label="Prioritet"
+                options={priorities}
+                getOptionLabel={(option) => option.priorityDescription || ''}
+                onBlur={() => setFieldTouched('priority', true)}
+                error={errors.priority}
+                touched={touched.priority}
+                onChange={(event, values) => setFieldValue('priority', values)}
+                value={values.priority}
               />
-              <Field
-                component={FormikTextField}
-                margin="dense"
-                name="color"
+              <ValidateAutocomplete
+                id="color"
+                className="signup-input"
+                name="colorName"
+                variant="standard"
                 label="Kolor"
-                type="color"
-                fullWidth
+                options={colors}
+                getOptionLabel={(option) => option.colorName || ''}
+                onBlur={() => setFieldTouched('color', true)}
+                error={errors.color}
+                touched={touched.color}
+                onChange={(event, values) => setFieldValue('color', values)}
+                value={values.color}
               />
             </DialogContent>
             <DialogActions>

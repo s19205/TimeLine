@@ -13,7 +13,7 @@ const TypeDeleteDialog = (props) => {
 
   const handleDelete = async () => {
     try {
-      const response = await DeleteEventType()
+      const response = await DeleteEventType(id)
       props.fetchTypes()
       props.handleClose()
     } catch (err) {

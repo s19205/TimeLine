@@ -105,7 +105,7 @@ const YearComponent = (props) => {
                 event.format === 'text'
                 ? (
                   <TextEvent 
-                    className="event text-event priority-1 brown"
+                    className={`event text-event priority-${event.priority} ${event.colorCode}`}
                     date={moment(event.eventDate).format('DD/MM/YYYY')} 
                     text={event.title} 
                     key={index}
@@ -119,7 +119,7 @@ const YearComponent = (props) => {
                 )
                 : (
                   <ImageEvent
-                    className="event priority-3 image-event slateblue"
+                    className={`event priority-${event.priority} image-event ${event.colorCode}`}
                     date={moment(event.eventDate).format('DD/MM/YYYY')}
                     text={event.title}
                     src={event.fileUrl}

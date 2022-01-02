@@ -6,13 +6,32 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import { GetEventType, UpdateEventType } from "../../../api/TypeOfEvent";
+import { GetEventType, UpdateEventType, GetColors, GetPriorities } from "../../../api/TypeOfEvent";
 import Processing from '../../../images/processing.gif';
+import ValidateAutocomplete from '../../../validation/ValidateAutocomplete';
 
 const TypeUpdateDialog = (props) => {
   const [typeData, setTypeData] = useState([])
   const { id } = props
   const [isLoading, setIsLoading] = useState(false)
+  const [colors, setColors] = useState([]);
+  const [priorities, setPriorities] = useState([]);
+
+  useEffect(() => {
+    const fetchColors = async () => {
+      const response = await GetColors()
+      setColors(response.data)
+    }
+    fetchColors()
+  }, [])
+
+  useEffect(() => {
+    const fetchPriorities = async () => {
+      const response = await GetPriorities()
+      setPriorities(response.data)
+    }
+    fetchPriorities()
+  }, [])
 
   useEffect(() => {
     const fetchTypeData = async () => {
@@ -32,20 +51,21 @@ const TypeUpdateDialog = (props) => {
     <Formik
       initialValues={{
         typeName: typeData.typeName ? typeData.typeName : '',
-        priority: typeData.priority ? typeData.priority : 1,
-        color: typeData.color ? typeData.color : '#006b54',
+        priority: typeData.idPriority ? priorities.find(e => e.idPriority === typeData.idPriority) : 1,
+        color: typeData.idColor ? colors.find(e => e.idColor === typeData.idColor) : '',
       }}
       validate={(values) => {
         const errors = {};
         if (!values.typeName) {
           errors.typeName = 'Nazwa wymagana';
-        } else if (values.typeName.length < 5) {
+        } else if (values.typeName.length < 4) {
           errors.typeName = 'Nazwa jest za krótka';
         }
-        if (values.priority < 1) {
-          errors.priority = 'Prioritet nie może być mniejszy od 1'
-        } else if (values.priority > 10) {
-          errors.priority = 'Prioritet nie może być wiekszy od 10'
+        if (!values.color) {
+          errors.color = 'Kolor wymagany';
+        }
+        if (!values.priority) {
+          errors.priority = 'Prioritet wymagany';
         }
         return errors; 
       }}
@@ -54,8 +74,10 @@ const TypeUpdateDialog = (props) => {
         try {
           setSubmitting(true)
           const data = {
-            ...values,
-            id: typeData.idTypeOfEvent
+            id,
+            typeName: values.typeName,
+            idPriority: values.priority.idPriority,
+            idColor: values.color.idColor
           }
           const response = await UpdateEventType(data)
           props.fetchTypes()
@@ -82,22 +104,31 @@ const TypeUpdateDialog = (props) => {
                 fullWidth
                 variant="standard"
               />
-              <Field
-                component={FormikTextField}
-                margin="dense"
+              <ValidateAutocomplete
+                className="signup-input"
                 name="priority"
-                label="Prioritet"
-                type="number"
-                fullWidth
                 variant="standard"
+                label="Prioritet"
+                options={priorities}
+                getOptionLabel={(option) => option.priorityDescription || ''}
+                onBlur={() => setFieldTouched('priority', true)}
+                error={errors.priority}
+                touched={touched.priority}
+                onChange={(event, values) => setFieldValue('priority', values)}
+                value={values.priority}
               />
-              <Field
-                component={FormikTextField}
-                margin="dense"
+              <ValidateAutocomplete
+                className="signup-input"
                 name="color"
+                variant="standard"
                 label="Kolor"
-                type="color"
-                fullWidth
+                options={colors}
+                getOptionLabel={(option) => option.colorName || ''}
+                onBlur={() => setFieldTouched('color', true)}
+                error={errors.color}
+                touched={touched.color}
+                onChange={(event, values) => setFieldValue('color', values)}
+                value={values.color}
               />
             </DialogContent>
             <DialogActions>
