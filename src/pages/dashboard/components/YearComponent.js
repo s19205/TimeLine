@@ -50,13 +50,11 @@ const YearComponent = (props) => {
   const [year, setYear] = React.useState(new Date());
   const [events, setEvents] = React.useState([])
   const history = useHistory()
-
+  const [isLoading, setIsLoading] = useState(false)
+  
   const handleShowEvent = (id) => {
     history.push(`/show-event/${id}`);
   }
-
-  const [isLoading, setIsLoading] = useState(false)
-
   useEffect(() => {
     const fetchEvents = async () => {
       setIsLoading(true)
@@ -132,7 +130,6 @@ const YearComponent = (props) => {
                   </ImageEvent>
                 )
                 ))}
-
             </Events>
           </Timeline>
         )

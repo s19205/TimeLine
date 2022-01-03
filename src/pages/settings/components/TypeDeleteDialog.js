@@ -10,7 +10,6 @@ import { DeleteEventType } from "../../../api/TypeOfEvent";
 const TypeDeleteDialog = (props) => {
   const { id } = props
   const [error, setError] = useState('')
-
   const handleDelete = async () => {
     try {
       const response = await DeleteEventType(id)
@@ -20,7 +19,6 @@ const TypeDeleteDialog = (props) => {
       setError(err.response.data)
     }
   }
-  
   return (
     <Dialog
       open={props.show}
