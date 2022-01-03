@@ -13,9 +13,13 @@ import { GetEventTypes } from '../../api/TypeOfEvent';
 import { GetEvent, UpdateEvent } from '../../api/Event';
 import Processing from '../../images/processing.gif';
 import EditDoneDialog from "./components/EditDoneDialog";
+import CancelIcon from '@mui/icons-material/Cancel';
+import './editEvent.css';
 
 function EditEvent(props) {
   const [types, setTypes] = useState([]);
+  const [file, setFile] = useState(null);
+  const [fileUrl, setFileUrl] = useState('')
   const [eventData, setEventData] = useState({
     title: '',
     description: '',
@@ -25,16 +29,19 @@ function EditEvent(props) {
   });
   const { id } = props.match.params
   const [isLoading, setIsLoading] = useState(false)
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchEventData = async () => {
       setIsLoading(true)
       const response = await GetEvent(id)
       setEventData(response.data)
+      setFileUrl(response.data.mediaFileUrl)
       setIsLoading(false)
     }
     fetchEventData()
   }, [])
+  console.log(file)
 
   useEffect(() => {
     const fetchTypes = async () => {
@@ -47,25 +54,24 @@ function EditEvent(props) {
   const handleBack = () => {
     props.history.push(`/show-event/${id}`);
   }
-
-//
-  const [file, setFile] = React.useState(null);
+  const handleDeleteFile = () => {
+    setFileUrl('')
+    setFile(null)
+  }
   const handleFile = (event) => {
     const file = event.target.files[0];
     setFile(file);
+    setFileUrl('')
   }
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   const Div = styled('div')(({ theme }) => ({
     ...theme.typography.button,
     padding: theme.spacing(2),
     fontSize: 26,
   }));
-
-  const [open, setOpen] = useState(false);
-  
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
   if (isLoading) {
     return <div sx={{ display: 'flex' }}><img src={Processing} width="300" /></div>
@@ -103,7 +109,8 @@ function EditEvent(props) {
               ...values,
               type: values.type.idTypeOfEvent,
               eventDate: values.eventDate.toISOString(),
-              file: file
+              file: file,
+              fileUrl
             }
             const response = await UpdateEvent(id, data)
             setSubmitting(false)
@@ -171,20 +178,27 @@ function EditEvent(props) {
               </Grid>
 
               {
-                eventData.mediaFileUrl != null
-                ? (
-                  <Grid item container xs={12} justifyContent="center">
-                    <img 
-                      className="view-image"
-                      src={eventData.mediaFileUrl}
-                      height='400px'
-                      width='400px'
-                      style={{ objectFit: 'cover' }}
-                    />
+                (fileUrl || file) &&
+                 (
+                  <Grid item container xs={12} justifyContent="center" position="relative">
+                    <div>
+                      <div className="delete-image-button-container">
+                        <Button 
+                          className="delete-image-button"
+                          onClick={handleDeleteFile}
+                        >
+                          <CancelIcon className="delete-image"/>
+                        </Button>
+                      </div>
+                      <img 
+                        className="view-image"
+                        src={fileUrl ? eventData.mediaFileUrl : URL.createObjectURL(file)}
+                        height='400px'
+                        width='400px'
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
                   </Grid>
-                )
-                : (
-                  <div></div>
                 )
               }
               <Grid item xs={12}>

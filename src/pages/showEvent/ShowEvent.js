@@ -11,6 +11,8 @@ import Processing from '../../images/processing.gif';
 import DeleteDialog from "./components/DeleteDialog";
 
 function ShowEvent(props) {
+  const { id } = props.match.params
+  const [isLoading, setIsLoading] = useState(false)
   const [types, setTypes] = useState([]);
   const [eventData, setEventData] = useState({
     title: '',
@@ -19,8 +21,6 @@ function ShowEvent(props) {
     idTypeOfEvent: '',
     mediaFileUrl: ''
   });
-  const { id } = props.match.params
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchEventData = async () => {

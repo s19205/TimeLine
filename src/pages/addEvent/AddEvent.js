@@ -12,6 +12,7 @@ import ValidateAutocomplete from '../../validation/ValidateAutocomplete';
 import { AddEvent } from '../../api/Event';
 import { GetEventTypes } from '../../api/TypeOfEvent';
 import AddDoneDialog from "./components/AddDoneDialog";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function AddEventFunction(props) {
   const [types, setTypes] = useState([]);
@@ -36,7 +37,9 @@ function AddEventFunction(props) {
     const file = event.target.files[0];
     setFile(file);
   }
-
+  const handleDeleteFile = () => {
+    setFile(null)
+  }
   const Div = styled('div')(({ theme }) => ({
     ...theme.typography.button,
     padding: theme.spacing(2),
@@ -142,7 +145,30 @@ function AddEventFunction(props) {
                   value={values.type}
                 />
               </Grid>
-
+              {
+                file &&
+                 (
+                  <Grid item container xs={12} justifyContent="center" position="relative">
+                    <div>
+                      <div className="delete-image-button-container">
+                        <Button 
+                          className="delete-image-button"
+                          onClick={handleDeleteFile}
+                        >
+                          <CancelIcon className="delete-image"/>
+                        </Button>
+                      </div>
+                      <img 
+                        className="view-image"
+                        src={URL.createObjectURL(file)}
+                        height='400px'
+                        width='400px'
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                  </Grid>
+                )
+              }
               <Grid item xs={12}>
               <Div sx={{ fontSize: 20 }}>{"Dodaj media"}</Div>
                 <Grid item container xs={12} justifyContent="center" style={{ gap: '30px' }}>

@@ -1,0 +1,17 @@
+.delete-image-button-container {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 5%;
+  right:39%;
+}
+
+.delete-image-button {
+  color: rgb(221, 221, 221) !important;
+}
+
+.delete-image {
+  height: 40px !important;
+  width: 40px !important;
+  fill: currentColor !important;
+}
