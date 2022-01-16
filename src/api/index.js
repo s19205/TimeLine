@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { handleTokenExpired } from '../utils/apiUtils';
-const apiAddress = 'https://localhost:44313';
+const apiAddress = 'https://timelineapi.azurewebsites.net';
 axios.defaults.baseURL = apiAddress;
 
 axios.interceptors.request.use(
