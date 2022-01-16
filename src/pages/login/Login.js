@@ -66,8 +66,10 @@ function Login(props) {
             handleLogin()
           }
         } catch (err) {
-          const { field, errorMessage } = err.response?.data;
-          (field && errorMessage) && setFieldError(field, errorMessage);
+          if (err.response) {
+            const { field, errorMessage } = err.response?.data;
+            (field && errorMessage) && setFieldError(field, errorMessage);
+          }
         }
       }}
     >
