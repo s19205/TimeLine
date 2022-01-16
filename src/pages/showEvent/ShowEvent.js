@@ -26,19 +26,14 @@ function ShowEvent(props) {
     const fetchEventData = async () => {
       setIsLoading(true)
       const response = await GetEvent(id)
+      const typesResponse = await GetEventTypes()
       setEventData(response.data)
+      setTypes(typesResponse.data)
       setIsLoading(false)
     }
     fetchEventData()
   }, [])
 
-  useEffect(() => {
-    const fetchTypes = async () => {
-      const response = await GetEventTypes()
-      setTypes(response.data)
-    }
-    fetchTypes()
-  }, [])
 
   const handleEdit = () => {
     props.history.push(`/edit-event/${id}`);
