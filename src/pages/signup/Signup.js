@@ -242,7 +242,7 @@ function Signup(props) {
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Płeć</FormLabel>
                   <Field row component={RadioGroup} name="sex">
-                    <FormControlLabel value="F" control={<Radio />} label="Kobieta" />
+                    <FormControlLabel value="K" control={<Radio />} label="Kobieta" />
                     <FormControlLabel value="M" control={<Radio />} label="Mężczyzna" />
                     <FormControlLabel value="N" control={<Radio />} label="Inny" />
                   </Field>

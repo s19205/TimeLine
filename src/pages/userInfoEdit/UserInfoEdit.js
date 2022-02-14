@@ -156,7 +156,7 @@ function UserInfoEdit(props) {
       >
         {({ submitForm, isSubmitting, setFieldTouched, setFieldValue, errors, values, touched }) => (
           <Form>
-            <Div>{"Edycja danych osobistych"}</Div>
+            <Div>{"Edycja danych osobowych"}</Div>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Field 
@@ -193,7 +193,7 @@ function UserInfoEdit(props) {
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Płeć</FormLabel>
                   <Field row component={RadioGroup} name="sex" defaultValue={values.sex}>
-                    <FormControlLabel value="F" control={<Radio />} label="Kobieta" />
+                    <FormControlLabel value="K" control={<Radio />} label="Kobieta" />
                     <FormControlLabel value="M" control={<Radio />} label="Mężczyzna" />
                     <FormControlLabel value="N" control={<Radio />} label="Inny" />
                   </Field>
